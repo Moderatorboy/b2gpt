@@ -505,11 +505,16 @@ header .navbar ul li a:hover {
   border-radius: 1rem;
   background: rgba(10, 15, 45, 0.86);
   box-shadow: 0 0.8rem 2rem rgba(0, 0, 0, 0.24);
-  transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background-color 0.25s ease;
 }
 .skills .skill-card:hover {
   transform: translateY(-0.4rem);
-  box-shadow: 0 1rem 2.4rem rgba(255, 230, 0, 0.18), 0 0 1.8rem rgba(72, 149, 239, 0.22);
+  box-shadow:
+    0 1rem 2.4rem rgba(255, 230, 0, 0.18),
+    0 0 1.8rem rgba(72, 149, 239, 0.22);
   background-color: rgba(14, 22, 62, 0.95);
 }
 .skills .skill-card img {
@@ -777,7 +782,11 @@ header .navbar ul li a:hover {
   justify-content: flex-end;
   padding: 2.4rem;
   color: #fff;
-  background: linear-gradient(180deg, transparent 30%, rgba(5, 5, 22, 0.9) 100%);
+  background: linear-gradient(
+    180deg,
+    transparent 30%,
+    rgba(5, 5, 22, 0.9) 100%
+  );
   transition: background 0.3s ease;
 }
 .work .project-content h3 {
@@ -802,7 +811,10 @@ header .navbar ul li a:hover {
   line-height: 1.6;
   opacity: 0;
   transform: translateY(1rem);
-  transition: max-height 0.3s ease, margin 0.3s ease, opacity 0.3s ease,
+  transition:
+    max-height 0.3s ease,
+    margin 0.3s ease,
+    opacity 0.3s ease,
     transform 0.3s ease;
 }
 .work .project-actions {
@@ -814,7 +826,10 @@ header .navbar ul li a:hover {
   overflow: hidden;
   opacity: 0;
   transform: translateY(1rem);
-  transition: max-height 0.3s ease, margin 0.3s ease, opacity 0.3s ease,
+  transition:
+    max-height 0.3s ease,
+    margin 0.3s ease,
+    opacity 0.3s ease,
     transform 0.3s ease;
 }
 .work .project-actions .btn {
@@ -837,7 +852,11 @@ header .navbar ul li a:hover {
 }
 .work .project-card:hover .project-content,
 .work .project-card:focus-within .project-content {
-  background: linear-gradient(180deg, rgba(5, 5, 22, 0.08), rgba(5, 5, 22, 0.94));
+  background: linear-gradient(
+    180deg,
+    rgba(5, 5, 22, 0.08),
+    rgba(5, 5, 22, 0.94)
+  );
 }
 .work .project-card:hover .project-content p,
 .work .project-card:focus-within .project-content p,
@@ -850,7 +869,11 @@ header .navbar ul li a:hover {
 }
 @media (hover: none) {
   .work .project-content {
-    background: linear-gradient(180deg, rgba(5, 5, 22, 0.08), rgba(5, 5, 22, 0.94));
+    background: linear-gradient(
+      180deg,
+      rgba(5, 5, 22, 0.08),
+      rgba(5, 5, 22, 0.94)
+    );
   }
   .work .project-content p,
   .work .project-actions {

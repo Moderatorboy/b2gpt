@@ -45,7 +45,10 @@ export default {
       submittedPassword.length !== configuredPassword.length ||
       !timingSafeEqual(submittedPassword, configuredPassword)
     ) {
-      return Response.json({ error: "Password is incorrect." }, { status: 401 });
+      return Response.json(
+        { error: "Password is incorrect." },
+        { status: 401 },
+      );
     }
 
     if (!file.size || file.size > MAX_FILE_SIZE) {
@@ -57,7 +60,10 @@ export default {
 
     const telegramForm = new FormData();
     telegramForm.append("chat_id", chatId);
-    telegramForm.append("caption", typeof title === "string" ? title.trim() : "");
+    telegramForm.append(
+      "caption",
+      typeof title === "string" ? title.trim() : "",
+    );
     telegramForm.append(
       "document",
       new Blob([await file.arrayBuffer()], {
