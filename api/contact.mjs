@@ -5,12 +5,6 @@ const MAX_EMAIL_LENGTH = 254;
 const MAX_PHONE_LENGTH = 30;
 const MAX_MESSAGE_LENGTH = 3000;
 
-const escapeHtml = (value) =>
-  String(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
-
 const ordinal = (number) => {
   const lastTwoDigits = number % 100;
   const suffix =
@@ -102,22 +96,34 @@ export default {
     }
 
     const count = await getInquiryCount(email);
-    const title =
+    const inquiryType =
       count === null
-        ? "<b>Contact Inquiry</b> <i>(counter unavailable)</i>"
+        ? ""
         : count === 1
-          ? "🆕 <b>New Inquiry</b>"
-          : `🔁 <b>Returning Visitor</b> (${ordinal(count)} message)`;
+          ? "🆕 New Inquiry"
+          : `🔁 Returning Visitor (${ordinal(count)} message)`;
+    const sentAt = new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Asia/Kolkata",
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    })
+      .format(new Date())
+      .replace(/\b(am|pm)\b/i, (period) => period.toUpperCase());
     const text = [
-      title,
+      "📩 Portfolio Inquiry",
+      ...(inquiryType ? [inquiryType] : []),
       "",
-      `👤 <b>Name:</b> ${escapeHtml(name)}`,
-      `📧 <b>Email:</b> ${escapeHtml(email)}`,
-      `📞 <b>Phone:</b> ${escapeHtml(phone)}`,
+      `👤 Name: ${name}`,
+      `📧 Email: ${email}`,
+      `📞 Phone: ${phone}`,
       "",
-      `💬 <b>Message:</b>\n<i>${escapeHtml(message)}</i>`,
+      `💬 Message:\n${message}`,
       "",
-      `🕒 ${new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}`,
+      `🕒 ${sentAt}`,
     ].join("\n");
 
     try {
@@ -126,7 +132,7 @@ export default {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ chat_id: chatId, text, parse_mode: "HTML" }),
+          body: JSON.stringify({ chat_id: chatId, text }),
         },
       );
       const result = await telegramResponse.json();
