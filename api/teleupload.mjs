@@ -1,17 +1,6 @@
 import { del, get } from "@vercel/blob";
-import { timingSafeEqual } from "node:crypto";
 
 const UPLOAD_PREFIX = "teleupload/";
-
-function passwordMatches(submitted, expected) {
-  if (typeof submitted !== "string" || !expected) return false;
-  const submittedBuffer = Buffer.from(submitted);
-  const expectedBuffer = Buffer.from(expected);
-  return (
-    submittedBuffer.length === expectedBuffer.length &&
-    timingSafeEqual(submittedBuffer, expectedBuffer)
-  );
-}
 
 function validUploadPath(pathname) {
   return (
@@ -29,8 +18,7 @@ export default {
       return Response.json({ error: "Method not allowed." }, { status: 405 });
     }
 
-    const expectedPassword = process.env.TELEUPLOAD_PASSWORD;
-    if (!expectedPassword || !process.env.BLOB_READ_WRITE_TOKEN) {
+    if (!process.env.BLOB_READ_WRITE_TOKEN) {
       return Response.json(
         { error: "TeleUpload storage is not configured yet." },
         { status: 503 },
@@ -46,9 +34,6 @@ export default {
 
     if (!data || typeof data !== "object" || Array.isArray(data)) {
       return Response.json({ error: "Invalid request." }, { status: 400 });
-    }
-    if (!passwordMatches(data.password, expectedPassword)) {
-      return Response.json({ error: "Password is incorrect." }, { status: 401 });
     }
     if (!validUploadPath(data.pathname)) {
       return Response.json({ error: "Invalid upload reference." }, { status: 400 });

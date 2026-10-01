@@ -5,8 +5,6 @@ const fileInput = document.getElementById("files");
 const fileName = document.getElementById("fileName");
 const selectedFilesList = document.getElementById("selectedFiles");
 const uploadDrop = document.getElementById("uploadDrop");
-const passwordInput = document.getElementById("password");
-const togglePassword = document.getElementById("togglePassword");
 const titleInput = document.getElementById("title");
 const sendButton = document.getElementById("sendButton");
 const progress = document.getElementById("progress");
@@ -89,21 +87,11 @@ uploadDrop.addEventListener("drop", (event) => {
   addFiles(event.dataTransfer.files);
 });
 
-togglePassword.addEventListener("click", () => {
-  const reveal = passwordInput.type === "password";
-  passwordInput.type = reveal ? "text" : "password";
-  togglePassword.setAttribute("aria-label", reveal ? "Hide password" : "Show password");
-  togglePassword.setAttribute("aria-pressed", String(reveal));
-  togglePassword.querySelector("i").className = reveal
-    ? "fas fa-eye-slash"
-    : "fas fa-eye";
-});
-
 function safeFileName(filename) {
   return filename.replace(/[^a-zA-Z0-9._-]/g, "_").slice(0, 180) || "upload";
 }
 
-async function sendFile(file, password, index, total) {
+async function sendFile(file, index, total) {
   const pathname = `teleupload/${crypto.randomUUID()}-${safeFileName(file.name)}`;
   let uploadedBlob;
 
@@ -115,7 +103,6 @@ async function sendFile(file, password, index, total) {
     uploadedBlob = await upload(pathname, file, {
       access: "private",
       handleUploadUrl: "/api/teleupload-upload",
-      clientPayload: JSON.stringify({ password }),
       multipart: file.size > 5 * 1024 * 1024,
       onUploadProgress: ({ percentage }) => {
         const batchProgress = ((index + percentage / 100) / total) * 90;
@@ -128,7 +115,6 @@ async function sendFile(file, password, index, total) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        password,
         pathname: uploadedBlob.pathname,
         filename: file.name,
         title: titleInput.value.trim(),
@@ -145,7 +131,6 @@ async function sendFile(file, password, index, total) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           action: "cleanup",
-          password,
           pathname: uploadedBlob.pathname,
         }),
       }).catch(() => {});
@@ -170,8 +155,8 @@ form.addEventListener("submit", async (event) => {
     return;
   }
 
-  const password = passwordInput.value;
   const failedFiles = [];
+  const failureDetails = [];
   let sentCount = 0;
   sendButton.disabled = true;
   progress.hidden = false;
@@ -180,12 +165,14 @@ form.addEventListener("submit", async (event) => {
 
   for (const [index, file] of selectedFiles.entries()) {
     try {
-      await sendFile(file, password, index, selectedFiles.length);
+      await sendFile(file, index, selectedFiles.length);
       sentCount += 1;
       progressFill.style.width = `${((index + 1) / selectedFiles.length) * 100}%`;
     } catch (error) {
       failedFiles.push(file);
-      status.textContent = `${file.name}: ${error.message || "Upload failed."}`;
+      const reason = error.message || "Upload failed.";
+      failureDetails.push(`${file.name}: ${reason}`);
+      status.textContent = reason;
       status.className = "teleupload-status error";
     }
   }
@@ -200,7 +187,7 @@ form.addEventListener("submit", async (event) => {
     status.textContent = `${sentCount} file${sentCount === 1 ? "" : "s"} Telegram par bhej di.`;
     status.className = "teleupload-status success";
   } else {
-    status.textContent = `${sentCount} sent; ${failedFiles.length} failed. Password dobara daal kar failed files retry karein.`;
+    status.textContent = `${sentCount} sent; ${failedFiles.length} failed. ${failureDetails[0] || "Please try again."}`;
     status.className = "teleupload-status error";
   }
 });

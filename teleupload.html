@@ -166,14 +166,12 @@
       .remove-file:hover {
         background: rgba(255, 170, 170, 0.12);
       }
-      .teleupload-form .remove-file i,
-      .teleupload-form .toggle-password i {
+      .teleupload-form .remove-file i {
         position: static;
         transform: none;
         pointer-events: none;
       }
-      .teleupload-form input[type="text"],
-      .teleupload-form input[type="password"] {
+      .teleupload-form input[type="text"] {
         width: 100%;
         min-height: 4.8rem;
         padding: 1.2rem 1.4rem;
@@ -187,31 +185,6 @@
       }
       .teleupload-form input::placeholder {
         color: #b9bfd1;
-      }
-      .password-input {
-        position: relative;
-      }
-      .teleupload-form .password-input input {
-        padding-right: 5rem;
-      }
-      .toggle-password {
-        position: absolute;
-        top: 50%;
-        right: 0.8rem;
-        width: 3.6rem;
-        height: 3.6rem;
-        display: grid;
-        place-items: center;
-        transform: translateY(-50%);
-        border-radius: 0.5rem;
-        background: transparent;
-        color: #d5d8ef;
-        cursor: pointer;
-        font-size: 1.6rem;
-      }
-      .toggle-password:hover {
-        background: rgba(255, 255, 255, 0.1);
-        color: #ffe600;
       }
       .teleupload-submit {
         width: 100%;
@@ -301,7 +274,7 @@
         <span class="teleupload-kicker">B2GPT Project</span>
         <h1 id="teleupload-title">TeleUpload</h1>
         <p class="teleupload-intro">
-          File chunein, title aur password dalein, phir Telegram par bhejein.
+          Ek ya zyada files select karein; files seedha aapke Telegram par bheji jayengi.
         </p>
 
         <form class="teleupload-form" id="teleuploadForm">
@@ -328,27 +301,6 @@
             maxlength="1024"
             placeholder="File ke saath bhejne wala title"
           />
-
-          <label for="password">Password</label>
-          <div class="password-input">
-            <input
-              id="password"
-              name="password"
-              type="password"
-              autocomplete="current-password"
-              required
-              placeholder="TeleUpload password"
-            />
-            <button
-              class="toggle-password"
-              id="togglePassword"
-              type="button"
-              aria-label="Show password"
-              aria-pressed="false"
-            >
-              <i class="fas fa-eye" aria-hidden="true"></i>
-            </button>
-          </div>
 
           <button class="teleupload-submit" id="sendButton" type="submit">
             <span>Telegram par bhejein</span>
