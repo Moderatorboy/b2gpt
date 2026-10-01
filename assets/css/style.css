@@ -1266,6 +1266,14 @@ header .navbar ul li a:hover {
   width: 45%;
   margin-right: 3.5rem;
 }
+.contact-honeypot {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
 form .form-group {
   display: flex;
   flex-direction: column;
@@ -1352,6 +1360,24 @@ form .button-area {
 }
 .button-area button:hover {
   background: #421cecf5;
+}
+.button-area button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+.contact-status {
+  clear: both;
+  min-height: 2rem;
+  padding-top: 1rem;
+  color: #333;
+  font-size: 1.35rem;
+  text-align: right;
+}
+.contact-status.success {
+  color: #16723d;
+}
+.contact-status.error {
+  color: #b3261e;
 }
 .button-area span {
   font-size: 17px;

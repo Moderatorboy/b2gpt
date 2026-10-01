@@ -37,22 +37,43 @@ $(document).ready(function () {
         }, 500, 'linear')
     });
 
-    // <!-- emailjs to mail contact form data -->
-    $("#contact-form").submit(function (event) {
-        emailjs.init("user_TTDmetQLYgWCLzHTDgqxm");
-
-        emailjs.sendForm('contact_service', 'template_contact', '#contact-form')
-            .then(function (response) {
-                console.log('SUCCESS!', response.status, response.text);
-                document.getElementById("contact-form").reset();
-                alert("Form Submitted Successfully");
-            }, function (error) {
-                console.log('FAILED...', error);
-                alert("Form Submission Failed! Try Again");
-            });
+    $("#contact-form").on("submit", async function (event) {
         event.preventDefault();
+        if (!this.reportValidity()) return;
+
+        const form = this;
+        const button = form.querySelector('button[type="submit"]');
+        const buttonText = button.querySelector("span");
+        const status = document.getElementById("contact-status");
+        button.disabled = true;
+        buttonText.textContent = "Sending...";
+        button.setAttribute("aria-busy", "true");
+        status.textContent = "Sending your message...";
+        status.className = "contact-status";
+
+        try {
+            const response = await fetch("/api/contact", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(Object.fromEntries(new FormData(form))),
+            });
+            const result = await response.json();
+            if (!response.ok) {
+                throw new Error(result.error || "Message could not be sent.");
+            }
+
+            form.reset();
+            status.textContent = "Message sent successfully.";
+            status.classList.add("success");
+        } catch (error) {
+            status.textContent = error.message || "Message could not be sent. Please try again.";
+            status.classList.add("error");
+        } finally {
+            button.disabled = false;
+            buttonText.textContent = "Submit";
+            button.removeAttribute("aria-busy");
+        }
     });
-    // <!-- emailjs to mail contact form data -->
 
 });
 
