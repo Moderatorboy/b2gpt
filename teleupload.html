@@ -96,11 +96,14 @@
           border-color 0.2s ease;
       }
       .upload-drop:hover,
-      .upload-drop.has-file {
+      .upload-drop.has-file,
+      .upload-drop.is-dragging {
         border-color: #ffe600;
         background: rgba(255, 230, 0, 0.07);
       }
       .upload-drop i {
+        position: static;
+        transform: none;
         display: block;
         margin-bottom: 1rem;
         color: #ffe600;
@@ -119,6 +122,56 @@
         overflow: hidden;
         clip: rect(0, 0, 0, 0);
       }
+      .selected-files {
+        display: grid;
+        gap: 0.6rem;
+        max-height: 14rem;
+        margin-top: 1rem;
+        padding: 0;
+        overflow-y: auto;
+        list-style: none;
+      }
+      .selected-files:empty {
+        display: none;
+      }
+      .selected-files li {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 0.8rem 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 0.5rem;
+        background: rgba(0, 0, 0, 0.15);
+        color: #e8e8ff;
+        font-size: 1.25rem;
+      }
+      .selected-file-name {
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
+      .selected-file-size {
+        flex: 0 0 auto;
+        color: #b9bfd1;
+      }
+      .remove-file {
+        flex: 0 0 auto;
+        width: 2.8rem;
+        height: 2.8rem;
+        border-radius: 0.4rem;
+        background: transparent;
+        color: #ffaaaa;
+        cursor: pointer;
+      }
+      .remove-file:hover {
+        background: rgba(255, 170, 170, 0.12);
+      }
+      .teleupload-form .remove-file i,
+      .teleupload-form .toggle-password i {
+        position: static;
+        transform: none;
+        pointer-events: none;
+      }
       .teleupload-form input[type="text"],
       .teleupload-form input[type="password"] {
         width: 100%;
@@ -134,6 +187,31 @@
       }
       .teleupload-form input::placeholder {
         color: #b9bfd1;
+      }
+      .password-input {
+        position: relative;
+      }
+      .teleupload-form .password-input input {
+        padding-right: 5rem;
+      }
+      .toggle-password {
+        position: absolute;
+        top: 50%;
+        right: 0.8rem;
+        width: 3.6rem;
+        height: 3.6rem;
+        display: grid;
+        place-items: center;
+        transform: translateY(-50%);
+        border-radius: 0.5rem;
+        background: transparent;
+        color: #d5d8ef;
+        cursor: pointer;
+        font-size: 1.6rem;
+      }
+      .toggle-password:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: #ffe600;
       }
       .teleupload-submit {
         width: 100%;
@@ -227,13 +305,20 @@
         </p>
 
         <form class="teleupload-form" id="teleuploadForm">
-          <label class="upload-drop" id="uploadDrop" for="file">
+          <label class="upload-drop" id="uploadDrop" for="files">
             <span>
               <i class="fas fa-cloud-upload-alt" aria-hidden="true"></i>
-              <span id="fileName">File chunne ke liye tap karein</span>
+              <span id="fileName">
+                Files select karein ya yahan drag and drop karein
+              </span>
             </span>
-            <input id="file" name="file" type="file" required />
+            <input id="files" name="files" type="file" multiple required />
           </label>
+          <ul
+            class="selected-files"
+            id="selectedFiles"
+            aria-label="Selected files"
+          ></ul>
 
           <label for="title">Title / Caption</label>
           <input
@@ -245,14 +330,25 @@
           />
 
           <label for="password">Password</label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            autocomplete="current-password"
-            required
-            placeholder="TeleUpload password"
-          />
+          <div class="password-input">
+            <input
+              id="password"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              required
+              placeholder="TeleUpload password"
+            />
+            <button
+              class="toggle-password"
+              id="togglePassword"
+              type="button"
+              aria-label="Show password"
+              aria-pressed="false"
+            >
+              <i class="fas fa-eye" aria-hidden="true"></i>
+            </button>
+          </div>
 
           <button class="teleupload-submit" id="sendButton" type="submit">
             <span>Telegram par bhejein</span>
@@ -267,80 +363,14 @@
             role="status"
             aria-live="polite"
           ></p>
-          <p class="teleupload-limit">Maximum file size: 4 MB</p>
+          <p class="teleupload-limit">
+            Har file 50 MB tak. Ek saath multiple files select/drop kar sakte
+            hain.
+          </p>
         </form>
       </section>
     </main>
 
-    <script>
-      const form = document.getElementById("teleuploadForm");
-      const fileInput = document.getElementById("file");
-      const fileName = document.getElementById("fileName");
-      const uploadDrop = document.getElementById("uploadDrop");
-      const sendButton = document.getElementById("sendButton");
-      const progress = document.getElementById("progress");
-      const progressFill = document.getElementById("progressFill");
-      const status = document.getElementById("status");
-      const maxFileSize = 4 * 1024 * 1024;
-
-      fileInput.addEventListener("change", () => {
-        const selectedFile = fileInput.files[0];
-        fileName.textContent = selectedFile
-          ? `${selectedFile.name} (${(selectedFile.size / 1048576).toFixed(1)} MB)`
-          : "File chunne ke liye tap karein";
-        uploadDrop.classList.toggle("has-file", Boolean(selectedFile));
-      });
-
-      form.addEventListener("submit", (event) => {
-        event.preventDefault();
-        const selectedFile = fileInput.files[0];
-        if (!selectedFile) return;
-        if (selectedFile.size > maxFileSize) {
-          status.textContent = "File 4 MB se chhoti honi chahiye.";
-          status.className = "teleupload-status error";
-          return;
-        }
-
-        const request = new XMLHttpRequest();
-        request.open("POST", "/api/teleupload");
-        request.responseType = "json";
-        progress.hidden = false;
-        progressFill.style.width = "0%";
-        sendButton.disabled = true;
-        status.textContent = "File bheji ja rahi hai...";
-        status.className = "teleupload-status";
-
-        request.upload.addEventListener("progress", (progressEvent) => {
-          if (progressEvent.lengthComputable) {
-            progressFill.style.width = `${(progressEvent.loaded / progressEvent.total) * 100}%`;
-          }
-        });
-        request.addEventListener("load", () => {
-          sendButton.disabled = false;
-          if (
-            request.status >= 200 &&
-            request.status < 300 &&
-            request.response?.ok
-          ) {
-            status.textContent = "Telegram par bhej diya.";
-            status.className = "teleupload-status success";
-            form.reset();
-            fileInput.dispatchEvent(new Event("change"));
-          } else {
-            status.textContent =
-              request.response?.error ||
-              "File nahi bheji ja saki. Dobara try karein.";
-            status.className = "teleupload-status error";
-          }
-        });
-        request.addEventListener("error", () => {
-          sendButton.disabled = false;
-          status.textContent =
-            "Network error. Internet check karke dobara try karein.";
-          status.className = "teleupload-status error";
-        });
-        request.send(new FormData(form));
-      });
-    </script>
+    <script type="module" src="./assets/js/teleupload.js"></script>
   </body>
 </html>
