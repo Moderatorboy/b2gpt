@@ -70,6 +70,8 @@
         grid-template-columns: minmax(0, 1.1fr) minmax(28rem, 0.9fr);
         align-items: center;
         gap: 4rem;
+        min-height: 0;
+        padding: 0;
       }
       .kautuhala-kicker {
         display: inline-block;
@@ -165,7 +167,9 @@
 
       /* Sections */
       .kautuhala-section {
+        min-height: 0;
         margin-top: 6rem;
+        padding: 0;
         scroll-margin-top: 9rem;
       }
       .kautuhala-section h2 {
@@ -324,6 +328,19 @@
         height: 100%;
         object-fit: cover;
         transition: transform 0.35s ease;
+      }
+      .memory-item::after {
+        position: absolute;
+        right: 1rem;
+        bottom: 1rem;
+        left: 1rem;
+        padding: 0.6rem 0.9rem;
+        border-radius: 0.4rem;
+        background: rgba(0, 0, 30, 0.75);
+        color: #fff;
+        content: attr(data-label);
+        font-size: 1.2rem;
+        text-align: left;
       }
       .memory-item:hover img {
         transform: scale(1.05);
@@ -610,44 +627,48 @@
             class="memory-item"
             type="button"
             data-zoom
+            data-label="Sample photo - replace with Kautuhala team photo"
             aria-label="View photo 1 full size"
           >
             <img
-              src="https://aapka-link.com/photo1.jpg"
-              alt="Team working on Kautuhala"
+              src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&amp;fit=crop&amp;w=900&amp;q=80"
+              alt="Sample team collaboration photo for Kautuhala"
             />
           </button>
           <button
             class="memory-item"
             type="button"
             data-zoom
+            data-label="Sample photo - replace with project work photo"
             aria-label="View photo 2 full size"
           >
             <img
-              src="https://aapka-link.com/photo2.jpg"
-              alt="Building the platform"
+              src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&amp;fit=crop&amp;w=900&amp;q=80"
+              alt="Sample group project photo for Kautuhala"
             />
           </button>
           <button
             class="memory-item"
             type="button"
             data-zoom
+            data-label="Sample photo - replace with testing photo"
             aria-label="View photo 3 full size"
           >
             <img
-              src="https://aapka-link.com/photo3.jpg"
-              alt="Testing the AI Outreach Studio"
+              src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&amp;fit=crop&amp;w=900&amp;q=80"
+              alt="Sample team discussion photo for Kautuhala"
             />
           </button>
           <button
             class="memory-item"
             type="button"
             data-zoom
+            data-label="Sample photo - replace with event photo"
             aria-label="View photo 4 full size"
           >
             <img
-              src="https://aapka-link.com/photo4.jpg"
-              alt="Presenting at Smart India Hackathon"
+              src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&amp;fit=crop&amp;w=900&amp;q=80"
+              alt="Sample project workspace photo for Kautuhala"
             />
           </button>
         </div>

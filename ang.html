@@ -5,8 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="ANG, an award-winning Smart Sustainable Township model by Bittu Kumar's team."
+      content="ANG, an award-winning Smart Sustainable Township model by Bittu Kumar's team. First place at the Engineers Day science exhibition, Munger."
     />
+    <meta property="og:title" content="ANG | Smart Sustainable Township" />
+    <meta
+      property="og:description"
+      content="Earthquake-resistant township model with a solar grid and Arduino infrared radar surveillance. 1st place at Engineers Day."
+    />
+    <meta property="og:image" content="./assets/images/projects/ang.png" />
     <title>ANG | Smart Sustainable Township</title>
     <link rel="stylesheet" href="./assets/css/style.css" />
     <link
@@ -44,12 +50,15 @@
         margin: 0 auto;
         padding: 10rem 2rem 6rem;
       }
+
+      /* Hero */
       .ang-hero {
         display: grid;
         grid-template-columns: minmax(0, 1.1fr) minmax(28rem, 0.9fr);
         align-items: center;
         gap: 4rem;
         min-height: 46rem;
+        padding: 0;
       }
       .ang-kicker {
         color: #ffe600;
@@ -82,27 +91,63 @@
         color: #ffe600;
         font-size: 1.25rem;
       }
-      .ang-visual {
+      .ang-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.2rem;
+        margin-top: 2.8rem;
+      }
+      .ang-btn {
+        display: inline-block;
+        padding: 1.1rem 2.2rem;
+        border-radius: 0.6rem;
+        background: #2a00b5;
+        color: #fff;
+        font-size: 1.4rem;
+        font-weight: 600;
+        transition: background 0.2s ease;
+      }
+      .ang-btn:hover {
+        background: #3b12d6;
+      }
+      .ang-btn.ghost {
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        background: transparent;
+      }
+      .ang-btn.ghost:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      /* Zoomable images */
+      .ang-zoom {
         display: block;
         width: 100%;
+        padding: 0;
         overflow: hidden;
         border: 1px solid rgba(255, 255, 255, 0.16);
         border-radius: 1rem;
         background: #0d0d52;
         cursor: zoom-in;
       }
-      .ang-visual img {
+      .ang-zoom img {
         display: block;
         width: 100%;
-        aspect-ratio: 4 / 3;
         object-fit: cover;
         transition: transform 0.35s ease;
       }
-      .ang-visual:hover img {
+      .ang-zoom:hover img {
         transform: scale(1.04);
       }
+      .ang-hero .ang-zoom img {
+        aspect-ratio: 4 / 3;
+      }
+
+      /* Sections */
       .ang-section {
-        margin-top: 5rem;
+        min-height: 0;
+        margin-top: 6rem;
+        padding: 0;
+        scroll-margin-top: 9rem;
       }
       .ang-section h2 {
         margin-bottom: 1.8rem;
@@ -118,7 +163,7 @@
         gap: 1.5rem;
       }
       .ang-feature,
-      .ang-news,
+      .ang-news-text,
       .ang-team span {
         border: 1px solid rgba(255, 255, 255, 0.12);
         border-radius: 0.8rem;
@@ -133,7 +178,7 @@
         font-size: 1.7rem;
       }
       .ang-feature p,
-      .ang-news li {
+      .ang-news-text li {
         color: #c9c9e8;
         font-size: 1.4rem;
         line-height: 1.7;
@@ -148,21 +193,69 @@
         color: #fff;
         font-size: 1.4rem;
       }
+
+      /* News */
       .ang-news {
+        display: grid;
+        grid-template-columns: minmax(0, 34rem) minmax(0, 1fr);
+        gap: 3rem;
+        align-items: start;
+      }
+      .ang-news figure {
+        margin: 0;
+      }
+      .ang-news figcaption,
+      .ang-note {
+        margin-top: 1rem;
+        color: #9a9ac8;
+        font-size: 1.2rem;
+      }
+      .ang-news-text {
         padding: 2rem 2.5rem;
       }
-      .ang-news ul {
+      .ang-news-text ul {
         padding-left: 2rem;
       }
-      .ang-news li + li {
-        margin-top: 0.8rem;
+      .ang-news-text li + li {
+        margin-top: 0.9rem;
       }
-      .ang-lightbox {
-        position: fixed;
-        inset: 0;
-        z-index: 11000;
-        display: none;
+
+      /* Moments gallery */
+      .ang-gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(26rem, 1fr));
+        gap: 1.5rem;
+      }
+      .ang-gallery .ang-zoom {
+        aspect-ratio: 4 / 3;
+        position: relative;
+      }
+      .ang-gallery .ang-zoom img {
+        height: 100%;
+      }
+      .ang-zoom.empty {
+        display: grid;
         place-items: center;
+        border-style: dashed;
+        cursor: default;
+      }
+      .ang-zoom.empty img {
+        display: none;
+      }
+      .ang-zoom.empty::after {
+        content: attr(data-label);
+        padding: 1rem;
+        color: #9a9ac8;
+        font-size: 1.2rem;
+        text-align: center;
+      }
+
+      /* Lightbox */
+      .ang-lightbox {
+        width: 100%;
+        max-width: none;
+        height: 100%;
+        max-height: none;
         padding: 2rem;
         border: 0;
         background: rgba(2, 2, 25, 0.94);
@@ -170,11 +263,24 @@
       }
       .ang-lightbox[open] {
         display: grid;
+        place-items: center;
       }
       .ang-lightbox img {
         max-width: 100%;
-        max-height: 90vh;
+        max-height: 92vh;
         border-radius: 0.8rem;
+      }
+
+      .ang-page a:focus-visible,
+      .ang-page button:focus-visible {
+        outline: 3px solid #ffe600;
+        outline-offset: 3px;
+      }
+
+      @media (max-width: 800px) {
+        .ang-news {
+          grid-template-columns: 1fr;
+        }
       }
       @media (max-width: 700px) {
         .ang-header {
@@ -193,7 +299,16 @@
           grid-template-columns: 1fr;
         }
         .ang-section {
-          margin-top: 3.5rem;
+          margin-top: 4rem;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .ang-zoom img,
+        .ang-btn {
+          transition: none;
+        }
+        .ang-zoom:hover img {
+          transform: none;
         }
       }
     </style>
@@ -216,13 +331,13 @@
     <main class="ang-main">
       <section class="ang-hero" aria-labelledby="ang-title">
         <div>
-          <p class="ang-kicker">Selected Project</p>
+          <p class="ang-kicker">Science Exhibition</p>
           <h1 id="ang-title">ANG - Smart Sustainable Township</h1>
           <p class="ang-lead">
             A working township model that combines earthquake-resistant
             structures, a solar grid, and an Arduino-based infrared radar
-            surveillance system. It won first place at the Engineers Day
-            science model exhibition.
+            surveillance system. It won first place at the Engineers Day science
+            model exhibition.
           </p>
           <div class="ang-badges" aria-label="Project highlights">
             <span class="ang-badge">1st Place</span>
@@ -231,11 +346,15 @@
             <span class="ang-badge">Infrared Radar</span>
             <span class="ang-badge">Team Project</span>
           </div>
+          <div class="ang-actions">
+            <a class="ang-btn" href="#news">News Coverage</a>
+            <a class="ang-btn ghost" href="#moments">Event Moments</a>
+          </div>
         </div>
         <button
-          class="ang-visual"
-          id="openAngImage"
+          class="ang-zoom"
           type="button"
+          data-zoom
           aria-label="View ANG township project image"
         >
           <img
@@ -268,7 +387,7 @@
       </section>
 
       <section class="ang-section" aria-labelledby="team-title">
-        <h2 id="team-title">Our <span>Team</span></h2>
+        <h2 id="team-title">Team <span>ANG</span></h2>
         <div class="ang-team">
           <span>Yashasvi Yadav</span>
           <span>Amit Kumar</span>
@@ -278,40 +397,122 @@
         </div>
       </section>
 
-      <section class="ang-section" aria-labelledby="news-title">
+      <section class="ang-section" id="news" aria-labelledby="news-title">
         <h2 id="news-title">In the <span>News</span></h2>
         <div class="ang-news">
-          <ul>
-            <li>
-              The model was presented at the National Engineers Day science
-              exhibition at Government Engineering College, Munger.
-            </li>
-            <li>
-              A seven-member jury judged models on working principle,
-              originality, cost, and usefulness.
-            </li>
-            <li>
-              Team ANG took first place for the Smart Sustainable Township
-              model.
-            </li>
-          </ul>
+          <figure>
+            <button
+              class="ang-zoom"
+              type="button"
+              data-zoom
+              data-label="Sample image - replace with the newspaper clipping"
+              aria-label="View newspaper clipping full size"
+            >
+              <img
+                src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&amp;fit=crop&amp;w=900&amp;q=80"
+                alt="Sample team photo placeholder for newspaper coverage"
+              />
+            </button>
+            <figcaption>
+              Sample image for layout. Replace with the newspaper clipping.
+            </figcaption>
+          </figure>
+          <div class="ang-news-text">
+            <ul>
+              <li>
+                The model was presented at the National Engineers Day science
+                exhibition at Government Engineering College, Munger.
+              </li>
+              <li>
+                A seven-member jury judged models on working principle,
+                originality, cost, and usefulness.
+              </li>
+              <li>
+                Team ANG took first place for the Smart Sustainable Township
+                model.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="ang-section" id="moments" aria-labelledby="moments-title">
+        <h2 id="moments-title">Event <span>Moments</span></h2>
+        <div class="ang-gallery">
+          <button
+            class="ang-zoom"
+            type="button"
+            data-zoom
+            data-label="Sample image - replace with an event photo"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&amp;fit=crop&amp;w=900&amp;q=80"
+              alt="Sample team collaboration photo placeholder"
+            />
+          </button>
+          <button
+            class="ang-zoom"
+            type="button"
+            data-zoom
+            data-label="Sample image - replace with an event photo"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&amp;fit=crop&amp;w=900&amp;q=80"
+              alt="Sample group discussion photo placeholder"
+            />
+          </button>
+          <button
+            class="ang-zoom"
+            type="button"
+            data-zoom
+            data-label="Sample image - replace with an event photo"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&amp;fit=crop&amp;w=900&amp;q=80"
+              alt="Sample project work photo placeholder"
+            />
+          </button>
+          <button
+            class="ang-zoom"
+            type="button"
+            data-zoom
+            data-label="Sample image - replace with an event photo"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&amp;fit=crop&amp;w=900&amp;q=80"
+              alt="Sample team photo placeholder"
+            />
+          </button>
         </div>
       </section>
     </main>
 
-    <dialog class="ang-lightbox" id="angLightbox" aria-label="ANG project image">
-      <img src="./assets/images/projects/ang.png" alt="ANG township model enlarged" />
+    <dialog class="ang-lightbox" id="angLightbox" aria-label="Enlarged image">
+      <img src="" alt="" />
     </dialog>
 
     <script>
-      const angLightbox = document.getElementById("angLightbox");
-      document.getElementById("openAngImage").addEventListener("click", () => {
-        angLightbox.showModal();
+      const lightbox = document.getElementById("angLightbox");
+      const lightboxImg = lightbox.querySelector("img");
+
+      document.querySelectorAll("[data-zoom] img").forEach((img) => {
+        img.addEventListener("error", () => {
+          img.parentElement.classList.add("empty");
+        });
       });
-      angLightbox.addEventListener("click", () => angLightbox.close());
-      document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape" && angLightbox.open) angLightbox.close();
+
+      document.querySelectorAll("[data-zoom]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          if (btn.classList.contains("empty")) return;
+          const img = btn.querySelector("img");
+          lightboxImg.src = img.currentSrc || img.src;
+          lightboxImg.alt = img.alt;
+          lightbox.showModal();
+        });
       });
+
+      // Click anywhere to close; Escape is handled by <dialog> itself.
+      lightbox.addEventListener("click", () => lightbox.close());
     </script>
   </body>
 </html>
