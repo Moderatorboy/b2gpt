@@ -3,6 +3,14 @@
     {
       "source": "/teleupload",
       "destination": "/teleupload.html"
+    },
+    {
+      "source": "/ang",
+      "destination": "/ang.html"
+    },
+    {
+      "source": "/kautuhala",
+      "destination": "/kautuhala.html"
     }
   ]
 }

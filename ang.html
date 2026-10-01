@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="ANG, an award-winning Smart Sustainable Township model by Bittu Kumar's team."
+    />
+    <title>ANG | Smart Sustainable Township</title>
+    <link rel="stylesheet" href="./assets/css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <link
+      rel="shortcut icon"
+      href="./assets/images/favicon.png"
+      type="image/x-png"
+    />
+    <style>
+      .ang-page * {
+        text-transform: none;
+      }
+      body.ang-page {
+        min-height: 100vh;
+        background: linear-gradient(to bottom, #000031, #00002c);
+        color: #e8e8ff;
+      }
+      .ang-header {
+        padding-right: 9%;
+        padding-left: 9%;
+      }
+      .ang-header .back-link {
+        color: #0e2431;
+        font-size: 1.5rem;
+        font-weight: 700;
+      }
+      .ang-header .back-link i {
+        margin-right: 0.6rem;
+      }
+      .ang-main {
+        width: min(100%, 112rem);
+        margin: 0 auto;
+        padding: 10rem 2rem 6rem;
+      }
+      .ang-hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(28rem, 0.9fr);
+        align-items: center;
+        gap: 4rem;
+        min-height: 46rem;
+      }
+      .ang-kicker {
+        color: #ffe600;
+        font-size: 1.3rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+      }
+      .ang-hero h1 {
+        margin: 1rem 0 1.4rem;
+        color: #fff;
+        font-size: clamp(3.2rem, 6vw, 5.6rem);
+        line-height: 1.1;
+      }
+      .ang-lead {
+        max-width: 62ch;
+        color: #c9c9e8;
+        font-size: 1.6rem;
+        line-height: 1.8;
+      }
+      .ang-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.9rem;
+        margin-top: 2.2rem;
+      }
+      .ang-badge {
+        padding: 0.5rem 1.3rem;
+        border: 1px solid rgba(255, 230, 0, 0.75);
+        border-radius: 999px;
+        color: #ffe600;
+        font-size: 1.25rem;
+      }
+      .ang-visual {
+        display: block;
+        width: 100%;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 1rem;
+        background: #0d0d52;
+        cursor: zoom-in;
+      }
+      .ang-visual img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+        transition: transform 0.35s ease;
+      }
+      .ang-visual:hover img {
+        transform: scale(1.04);
+      }
+      .ang-section {
+        margin-top: 5rem;
+      }
+      .ang-section h2 {
+        margin-bottom: 1.8rem;
+        color: #fff;
+        font-size: 2.8rem;
+      }
+      .ang-section h2 span {
+        color: #ffe600;
+      }
+      .ang-features {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1.5rem;
+      }
+      .ang-feature,
+      .ang-news,
+      .ang-team span {
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 0.8rem;
+        background: rgba(255, 255, 255, 0.06);
+      }
+      .ang-feature {
+        padding: 1.8rem;
+      }
+      .ang-feature h3 {
+        margin-bottom: 0.7rem;
+        color: #ffe600;
+        font-size: 1.7rem;
+      }
+      .ang-feature p,
+      .ang-news li {
+        color: #c9c9e8;
+        font-size: 1.4rem;
+        line-height: 1.7;
+      }
+      .ang-team {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+      .ang-team span {
+        padding: 0.8rem 1.5rem;
+        color: #fff;
+        font-size: 1.4rem;
+      }
+      .ang-news {
+        padding: 2rem 2.5rem;
+      }
+      .ang-news ul {
+        padding-left: 2rem;
+      }
+      .ang-news li + li {
+        margin-top: 0.8rem;
+      }
+      .ang-lightbox {
+        position: fixed;
+        inset: 0;
+        z-index: 11000;
+        display: none;
+        place-items: center;
+        padding: 2rem;
+        border: 0;
+        background: rgba(2, 2, 25, 0.94);
+        cursor: zoom-out;
+      }
+      .ang-lightbox[open] {
+        display: grid;
+      }
+      .ang-lightbox img {
+        max-width: 100%;
+        max-height: 90vh;
+        border-radius: 0.8rem;
+      }
+      @media (max-width: 700px) {
+        .ang-header {
+          padding-right: 5%;
+          padding-left: 5%;
+        }
+        .ang-main {
+          padding: 9rem 2rem 4rem;
+        }
+        .ang-hero {
+          grid-template-columns: 1fr;
+          gap: 2.5rem;
+          min-height: 0;
+        }
+        .ang-features {
+          grid-template-columns: 1fr;
+        }
+        .ang-section {
+          margin-top: 3.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body class="ang-page">
+    <header class="ang-header">
+      <a href="index.html" class="logo">
+        <img
+          src="./assets/images/logo.png"
+          alt="BITTU GPT logo"
+          style="height: 36px; vertical-align: middle"
+        />
+        <span>B2GPT</span>
+      </a>
+      <a class="back-link" href="index.html#work">
+        <i class="fas fa-arrow-left" aria-hidden="true"></i> Back to Projects
+      </a>
+    </header>
+
+    <main class="ang-main">
+      <section class="ang-hero" aria-labelledby="ang-title">
+        <div>
+          <p class="ang-kicker">Selected Project</p>
+          <h1 id="ang-title">ANG - Smart Sustainable Township</h1>
+          <p class="ang-lead">
+            A working township model that combines earthquake-resistant
+            structures, a solar grid, and an Arduino-based infrared radar
+            surveillance system. It won first place at the Engineers Day
+            science model exhibition.
+          </p>
+          <div class="ang-badges" aria-label="Project highlights">
+            <span class="ang-badge">1st Place</span>
+            <span class="ang-badge">Arduino</span>
+            <span class="ang-badge">Solar Grid</span>
+            <span class="ang-badge">Infrared Radar</span>
+            <span class="ang-badge">Team Project</span>
+          </div>
+        </div>
+        <button
+          class="ang-visual"
+          id="openAngImage"
+          type="button"
+          aria-label="View ANG township project image"
+        >
+          <img
+            src="./assets/images/projects/ang.png"
+            alt="ANG Smart Sustainable Township project model"
+          />
+        </button>
+      </section>
+
+      <section class="ang-section" aria-labelledby="features-title">
+        <h2 id="features-title">Key <span>Features</span></h2>
+        <div class="ang-features">
+          <article class="ang-feature">
+            <h3>Earthquake-Resistant Structure</h3>
+            <p>Buildings designed to stay stable under tremors.</p>
+          </article>
+          <article class="ang-feature">
+            <h3>Solar Grid</h3>
+            <p>Clean energy powering the township.</p>
+          </article>
+          <article class="ang-feature">
+            <h3>Infrared Radar Surveillance</h3>
+            <p>Arduino-based system that detects movement for security.</p>
+          </article>
+          <article class="ang-feature">
+            <h3>Sustainable Planning</h3>
+            <p>Roads, housing, and utilities planned as one smart township.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="ang-section" aria-labelledby="team-title">
+        <h2 id="team-title">Our <span>Team</span></h2>
+        <div class="ang-team">
+          <span>Yashasvi Yadav</span>
+          <span>Amit Kumar</span>
+          <span>Bittu Kumar</span>
+          <span>Rahul Kumar</span>
+          <span>Sahil Kumar</span>
+        </div>
+      </section>
+
+      <section class="ang-section" aria-labelledby="news-title">
+        <h2 id="news-title">In the <span>News</span></h2>
+        <div class="ang-news">
+          <ul>
+            <li>
+              The model was presented at the National Engineers Day science
+              exhibition at Government Engineering College, Munger.
+            </li>
+            <li>
+              A seven-member jury judged models on working principle,
+              originality, cost, and usefulness.
+            </li>
+            <li>
+              Team ANG took first place for the Smart Sustainable Township
+              model.
+            </li>
+          </ul>
+        </div>
+      </section>
+    </main>
+
+    <dialog class="ang-lightbox" id="angLightbox" aria-label="ANG project image">
+      <img src="./assets/images/projects/ang.png" alt="ANG township model enlarged" />
+    </dialog>
+
+    <script>
+      const angLightbox = document.getElementById("angLightbox");
+      document.getElementById("openAngImage").addEventListener("click", () => {
+        angLightbox.showModal();
+      });
+      angLightbox.addEventListener("click", () => angLightbox.close());
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && angLightbox.open) angLightbox.close();
+      });
+    </script>
+  </body>
+</html>
