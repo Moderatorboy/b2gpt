@@ -5,7 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Kautuhala turns scientific knowledge into public discovery through connected research and AI-assisted outreach."
+      content="Kautuhala turns scientific knowledge into public discovery through connected research and AI-assisted outreach. Built for Smart India Hackathon, Problem Statement 26063."
+    />
+    <meta
+      property="og:title"
+      content="Kautuhala | Scientific Knowledge Into Public Discovery"
+    />
+    <meta
+      property="og:image"
+      content="./assets/images/projects/Kautuhala.png"
     />
     <title>Kautuhala | Scientific Knowledge Into Public Discovery</title>
     <link rel="stylesheet" href="./assets/css/style.css" />
@@ -23,8 +31,19 @@
         text-transform: none;
       }
       body.kautuhala-page {
+        --yellow: #ffe600;
+        --cyan: #1fc8ff;
+        --card: #0b0b4a;
+        --line: #26267f;
+        --muted: #b9b9dc;
         min-height: 100vh;
-        background: linear-gradient(to bottom, #000031, #00002c);
+        background:
+          radial-gradient(
+            60rem 40rem at 85% -5%,
+            rgba(31, 200, 255, 0.14),
+            transparent 70%
+          ),
+          linear-gradient(to bottom, #000031, #00002c);
         color: #e8e8ff;
       }
       .kautuhala-header {
@@ -44,6 +63,8 @@
         margin: 0 auto;
         padding: 10rem 2rem 7rem;
       }
+
+      /* Hero */
       .kautuhala-hero {
         display: grid;
         grid-template-columns: minmax(0, 1.1fr) minmax(28rem, 0.9fr);
@@ -51,26 +72,29 @@
         gap: 4rem;
       }
       .kautuhala-kicker {
-        color: #ffe600;
+        display: inline-block;
+        padding: 0.5rem 1.4rem;
+        border-radius: 999px;
+        background: rgba(255, 230, 0, 0.12);
+        color: var(--yellow);
         font-size: 1.3rem;
         font-weight: 700;
-        letter-spacing: 0.08em;
       }
       .kautuhala-hero h1 {
-        margin: 0.8rem 0 0.6rem;
+        margin: 1.2rem 0 0.6rem;
         color: #fff;
-        font-size: clamp(3.4rem, 6vw, 5.6rem);
-        line-height: 1.1;
+        font-size: clamp(3.6rem, 6vw, 6rem);
+        line-height: 1.05;
       }
       .kautuhala-subtitle {
         margin-bottom: 1.4rem;
-        color: #1fc8ff;
-        font-size: 1.8rem;
+        color: var(--cyan);
+        font-size: 1.9rem;
         font-weight: 600;
       }
       .kautuhala-lead {
         max-width: 66ch;
-        color: #c9c9e8;
+        color: var(--muted);
         font-size: 1.5rem;
         line-height: 1.8;
       }
@@ -86,17 +110,51 @@
       }
       .kautuhala-badge {
         padding: 0.5rem 1.2rem;
-        border: 1px solid rgba(255, 230, 0, 0.75);
+        border: 1px solid rgba(255, 230, 0, 0.7);
         border-radius: 999px;
-        color: #ffe600;
+        color: var(--yellow);
         font-size: 1.25rem;
+      }
+      .kautuhala-badge.sih {
+        background: var(--yellow);
+        color: #000031;
+        font-weight: 700;
+      }
+      .kautuhala-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.2rem;
+        margin-top: 2.6rem;
+      }
+      .kautuhala-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.8rem;
+        padding: 1.1rem 2rem;
+        border-radius: 0.6rem;
+        background: #2a00b5;
+        color: #fff;
+        font-size: 1.4rem;
+        font-weight: 700;
+        transition: background 0.2s ease;
+      }
+      .kautuhala-button:hover {
+        background: #3b12d6;
+      }
+      .kautuhala-button.ghost {
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        background: transparent;
+      }
+      .kautuhala-button.ghost:hover {
+        background: rgba(255, 255, 255, 0.1);
       }
       .kautuhala-preview {
         width: 100%;
         overflow: hidden;
-        border: 1px solid rgba(255, 255, 255, 0.16);
+        border: 1px solid rgba(31, 200, 255, 0.35);
         border-radius: 1rem;
-        background: #0d0d52;
+        background: var(--card);
+        box-shadow: 0 2rem 6rem rgba(31, 200, 255, 0.12);
       }
       .kautuhala-preview img {
         display: block;
@@ -104,23 +162,11 @@
         aspect-ratio: 4 / 3;
         object-fit: cover;
       }
-      .kautuhala-button {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.8rem;
-        margin-top: 2rem;
-        padding: 1.1rem 1.7rem;
-        border-radius: 0.5rem;
-        background: #2a00b5;
-        color: #fff;
-        font-size: 1.4rem;
-        font-weight: 700;
-      }
-      .kautuhala-button:hover {
-        background: #3a10d0;
-      }
+
+      /* Sections */
       .kautuhala-section {
-        margin-top: 5.5rem;
+        margin-top: 6rem;
+        scroll-margin-top: 9rem;
       }
       .kautuhala-section h2 {
         margin-bottom: 1.8rem;
@@ -128,7 +174,7 @@
         font-size: 2.8rem;
       }
       .kautuhala-section h2 span {
-        color: #ffe600;
+        color: var(--yellow);
       }
       .kautuhala-grid {
         display: grid;
@@ -137,28 +183,53 @@
       }
       .kautuhala-card {
         padding: 1.8rem;
-        border: 1px solid #23237a;
+        border: 1px solid var(--line);
+        border-top: 3px solid var(--cyan);
         border-radius: 0.8rem;
-        background: #0d0d52;
+        background: var(--card);
       }
       .kautuhala-card h3 {
         margin-bottom: 0.6rem;
-        color: #ffe600;
+        color: var(--yellow);
         font-size: 1.65rem;
       }
       .kautuhala-card p,
       .kautuhala-card li {
-        color: #c9c9e8;
+        color: var(--muted);
         font-size: 1.35rem;
         line-height: 1.7;
       }
       .kautuhala-card ul {
         padding-left: 1.8rem;
       }
+      .kautuhala-sih {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 2rem;
+        padding: 2rem 2.4rem;
+        border: 1px solid rgba(255, 230, 0, 0.45);
+        border-radius: 1rem;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 230, 0, 0.09),
+          rgba(31, 200, 255, 0.07)
+        );
+      }
+      .kautuhala-sih strong {
+        color: var(--yellow);
+        font-size: 3.4rem;
+        line-height: 1;
+      }
+      .kautuhala-sih p {
+        color: var(--muted);
+        font-size: 1.4rem;
+        max-width: 52ch;
+      }
       .kautuhala-quote {
         margin-top: 1.8rem;
         padding: 0.5rem 0 0.5rem 1.8rem;
-        border-left: 4px solid #ffe600;
+        border-left: 4px solid var(--yellow);
         color: #e8e8ff;
         font-size: 1.6rem;
       }
@@ -173,89 +244,114 @@
       .kautuhala-steps li {
         counter-increment: lifecycle;
         padding: 1.4rem 1rem;
-        border: 1px solid #23237a;
+        border: 1px solid var(--line);
         border-radius: 0.8rem;
-        background: #0d0d52;
+        background: var(--card);
         color: #fff;
-        font-size: 1.4rem;
+        font-size: 1.5rem;
         font-weight: 700;
         text-align: center;
       }
       .kautuhala-steps li::before {
         display: block;
-        color: #ffe600;
+        color: var(--cyan);
         content: counter(lifecycle);
-        font-size: 1.8rem;
+        font-size: 2rem;
       }
       .kautuhala-steps small {
         display: block;
         margin-top: 0.4rem;
-        color: #a9a9d6;
+        color: var(--muted);
         font-size: 1.15rem;
         font-weight: 400;
         line-height: 1.5;
       }
-      .kautuhala-chip,
-      .kautuhala-team span {
+      .kautuhala-chip {
         padding: 0.8rem 1.4rem;
-        border: 1px solid #23237a;
+        border: 1px solid var(--line);
         border-radius: 0.7rem;
-        background: #0d0d52;
+        background: var(--card);
         color: #e8e8ff;
         font-size: 1.3rem;
       }
       .kautuhala-table-wrap {
         overflow-x: auto;
-        border: 1px solid #23237a;
+        border: 1px solid var(--line);
         border-radius: 0.8rem;
       }
       .kautuhala-table {
         width: 100%;
         border-collapse: collapse;
-        background: #0d0d52;
+        background: var(--card);
       }
       .kautuhala-table th,
       .kautuhala-table td {
         padding: 1.2rem 1.6rem;
-        border-bottom: 1px solid #23237a;
+        border-bottom: 1px solid var(--line);
         font-size: 1.35rem;
         text-align: left;
       }
       .kautuhala-table th {
-        color: #ffe600;
+        color: var(--yellow);
+      }
+      .kautuhala-table td:first-child {
+        color: var(--cyan);
+        font-weight: 600;
       }
       .kautuhala-table tr:last-child td {
         border-bottom: 0;
       }
+
+      /* Memories */
       .memory-gallery {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
-        gap: 1.4rem;
+        grid-template-columns: repeat(auto-fill, minmax(26rem, 1fr));
+        gap: 1.5rem;
       }
-      .memory-slot {
+      .memory-item {
+        position: relative;
         aspect-ratio: 4 / 3;
-        display: grid;
-        align-content: center;
-        justify-items: center;
-        gap: 0.8rem;
-        padding: 1.5rem;
-        border: 1px dashed #45459a;
+        padding: 0;
+        overflow: hidden;
+        border: 1px solid var(--line);
         border-radius: 0.8rem;
-        background: rgba(13, 13, 82, 0.72);
-        color: #a9a9d6;
-        text-align: center;
+        background: var(--card);
+        cursor: zoom-in;
       }
-      .memory-slot i {
-        color: #ffe600;
-        font-size: 2.6rem;
+      .memory-item img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.35s ease;
       }
-      .memory-slot span {
-        color: #e8e8ff;
-        font-size: 1.35rem;
-        font-weight: 600;
+      .memory-item:hover img {
+        transform: scale(1.05);
       }
-      .memory-slot small {
-        font-size: 1.15rem;
+      .kautuhala-lightbox {
+        width: 100%;
+        max-width: none;
+        height: 100%;
+        max-height: none;
+        padding: 2rem;
+        border: 0;
+        background: rgba(2, 2, 25, 0.95);
+        cursor: zoom-out;
+      }
+      .kautuhala-lightbox[open] {
+        display: grid;
+        place-items: center;
+      }
+      .kautuhala-lightbox img {
+        max-width: 100%;
+        max-height: 92vh;
+        border-radius: 0.8rem;
+      }
+
+      .kautuhala-page a:focus-visible,
+      .kautuhala-page button:focus-visible {
+        outline: 3px solid var(--yellow);
+        outline-offset: 3px;
       }
       @media (max-width: 760px) {
         .kautuhala-header {
@@ -274,6 +370,15 @@
         }
         .kautuhala-steps {
           grid-template-columns: 1fr;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .memory-item img,
+        .kautuhala-button {
+          transition: none;
+        }
+        .memory-item:hover img {
+          transform: none;
         }
       }
     </style>
@@ -296,29 +401,31 @@
     <main class="kautuhala-main">
       <section class="kautuhala-hero" aria-labelledby="kautuhala-title">
         <div>
-          <p class="kautuhala-kicker">Selected Project</p>
+          <p class="kautuhala-kicker">Smart India Hackathon</p>
           <h1 id="kautuhala-title">Kautuhala</h1>
           <p class="kautuhala-subtitle">
             Turning Scientific Knowledge Into Public Discovery
           </p>
           <p class="kautuhala-lead">
-            An intelligent scientific knowledge and outreach platform. It
-            brings an institution's scattered reports, datasets, photographs,
-            videos, and expedition records into one connected, searchable
-            space, and uses AI to turn research into stories the public can
-            understand.
+            An intelligent scientific knowledge and outreach platform. It brings
+            an institution's scattered reports, datasets, photographs, videos,
+            and expedition records into one connected, searchable space, and
+            uses AI to turn research into stories the public can understand.
           </p>
           <div class="kautuhala-badges" aria-label="Project technologies">
-            <span class="kautuhala-badge">SIH MVP</span>
+            <span class="kautuhala-badge sih">SIH PS 26063</span>
             <span class="kautuhala-badge">FastAPI</span>
             <span class="kautuhala-badge">PostgreSQL</span>
             <span class="kautuhala-badge">pgvector</span>
             <span class="kautuhala-badge">AI / LLM</span>
             <span class="kautuhala-badge">Docker</span>
           </div>
-          <a class="kautuhala-button" href="#memories">
-            View Memories <i class="fas fa-arrow-down" aria-hidden="true"></i>
-          </a>
+          <div class="kautuhala-actions">
+            <a class="kautuhala-button" href="#memories">
+              View Memories <i class="fas fa-arrow-down" aria-hidden="true"></i>
+            </a>
+            <!-- <a class="kautuhala-button ghost" href="YOUR_GITHUB_LINK"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a> -->
+          </div>
         </div>
         <div class="kautuhala-preview">
           <img
@@ -328,13 +435,24 @@
         </div>
       </section>
 
+      <section class="kautuhala-section" aria-labelledby="sih-title">
+        <h2 id="sih-title">Smart India <span>Hackathon</span></h2>
+        <div class="kautuhala-sih">
+          <strong>26063</strong>
+          <p>
+            Problem Statement ID. Kautuhala was built as an MVP for this Smart
+            India Hackathon problem statement.
+          </p>
+        </div>
+      </section>
+
       <section class="kautuhala-section" aria-labelledby="problem-title">
         <h2 id="problem-title">The <span>Problem</span></h2>
         <p class="kautuhala-lead">
-          Research institutes hold thousands of files spread across websites
-          and storage systems. Finding the right information is hard, and
-          turning valuable research into something the general public can
-          follow takes a lot of manual work.
+          Research institutes hold thousands of files spread across websites and
+          storage systems. Finding the right information is hard, and turning
+          valuable research into something the general public can follow takes a
+          lot of manual work.
         </p>
       </section>
 
@@ -344,9 +462,9 @@
           <article class="kautuhala-card">
             <h3>Makes knowledge easy to discover</h3>
             <p>
-              Research, expeditions, datasets, publications, photos, videos,
-              and activities are organized and connected, so users can see how
-              they relate to one another.
+              Research, expeditions, datasets, publications, photos, videos, and
+              activities are organized and connected, so users can see how they
+              relate to one another.
             </p>
           </article>
           <article class="kautuhala-card">
@@ -359,8 +477,7 @@
           </article>
         </div>
         <p class="kautuhala-quote">
-          Search finds what is relevant. Relationships reveal what is
-          connected.
+          Search finds what is relevant. Relationships reveal what is connected.
         </p>
       </section>
 
@@ -447,15 +564,36 @@
         <div class="kautuhala-table-wrap">
           <table class="kautuhala-table">
             <thead>
-              <tr><th>Layer</th><th>Technology</th></tr>
+              <tr>
+                <th>Layer</th>
+                <th>Technology</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td>Frontend</td><td>Vanilla JS</td></tr>
-              <tr><td>Backend</td><td>FastAPI (modular monolith)</td></tr>
-              <tr><td>Database</td><td>PostgreSQL</td></tr>
-              <tr><td>Search</td><td>pgvector, pg_trgm</td></tr>
-              <tr><td>AI</td><td>Python AI / LLM stack</td></tr>
-              <tr><td>Deployment</td><td>Docker</td></tr>
+              <tr>
+                <td>Frontend</td>
+                <td>Vanilla JS</td>
+              </tr>
+              <tr>
+                <td>Backend</td>
+                <td>FastAPI (modular monolith)</td>
+              </tr>
+              <tr>
+                <td>Database</td>
+                <td>PostgreSQL</td>
+              </tr>
+              <tr>
+                <td>Search</td>
+                <td>pgvector, pg_trgm</td>
+              </tr>
+              <tr>
+                <td>AI</td>
+                <td>Python AI / LLM stack</td>
+              </tr>
+              <tr>
+                <td>Deployment</td>
+                <td>Docker</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -467,15 +605,75 @@
         aria-labelledby="memories-title"
       >
         <h2 id="memories-title">Project <span>Memories</span></h2>
-        <div class="memory-gallery" aria-label="Kautuhala project photo placeholders">
-          <figure class="memory-slot"><i class="far fa-image" aria-hidden="true"></i><span>Project Photo 1</span><small>Photo holder</small></figure>
-          <figure class="memory-slot"><i class="far fa-image" aria-hidden="true"></i><span>Project Photo 2</span><small>Photo holder</small></figure>
-          <figure class="memory-slot"><i class="far fa-image" aria-hidden="true"></i><span>Project Photo 3</span><small>Photo holder</small></figure>
-          <figure class="memory-slot"><i class="far fa-image" aria-hidden="true"></i><span>Project Photo 4</span><small>Photo holder</small></figure>
-          <figure class="memory-slot"><i class="far fa-image" aria-hidden="true"></i><span>Project Photo 5</span><small>Photo holder</small></figure>
-          <figure class="memory-slot"><i class="far fa-image" aria-hidden="true"></i><span>Project Photo 6</span><small>Photo holder</small></figure>
+        <div class="memory-gallery">
+          <button
+            class="memory-item"
+            type="button"
+            data-zoom
+            aria-label="View photo 1 full size"
+          >
+            <img
+              src="https://aapka-link.com/photo1.jpg"
+              alt="Team working on Kautuhala"
+            />
+          </button>
+          <button
+            class="memory-item"
+            type="button"
+            data-zoom
+            aria-label="View photo 2 full size"
+          >
+            <img
+              src="https://aapka-link.com/photo2.jpg"
+              alt="Building the platform"
+            />
+          </button>
+          <button
+            class="memory-item"
+            type="button"
+            data-zoom
+            aria-label="View photo 3 full size"
+          >
+            <img
+              src="https://aapka-link.com/photo3.jpg"
+              alt="Testing the AI Outreach Studio"
+            />
+          </button>
+          <button
+            class="memory-item"
+            type="button"
+            data-zoom
+            aria-label="View photo 4 full size"
+          >
+            <img
+              src="https://aapka-link.com/photo4.jpg"
+              alt="Presenting at Smart India Hackathon"
+            />
+          </button>
         </div>
       </section>
     </main>
+
+    <dialog
+      class="kautuhala-lightbox"
+      id="kLightbox"
+      aria-label="Enlarged photo"
+    >
+      <img src="" alt="" />
+    </dialog>
+
+    <script>
+      const box = document.getElementById("kLightbox");
+      const boxImg = box.querySelector("img");
+      document.querySelectorAll("[data-zoom]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const img = btn.querySelector("img");
+          boxImg.src = img.currentSrc || img.src;
+          boxImg.alt = img.alt;
+          box.showModal();
+        });
+      });
+      box.addEventListener("click", () => box.close());
+    </script>
   </body>
 </html>
