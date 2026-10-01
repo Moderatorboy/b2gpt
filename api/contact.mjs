@@ -1,7 +1,49 @@
+import { createHash } from "node:crypto";
+
 const MAX_NAME_LENGTH = 100;
 const MAX_EMAIL_LENGTH = 254;
 const MAX_PHONE_LENGTH = 30;
 const MAX_MESSAGE_LENGTH = 3000;
+
+const escapeHtml = (value) =>
+  String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+
+const ordinal = (number) => {
+  const lastTwoDigits = number % 100;
+  const suffix =
+    lastTwoDigits >= 11 && lastTwoDigits <= 13
+      ? "th"
+      : ({ 1: "st", 2: "nd", 3: "rd" }[number % 10] || "th");
+  return `${number}${suffix}`;
+};
+
+async function getInquiryCount(email) {
+  const redisUrl = process.env.UPSTASH_REDIS_REST_URL;
+  const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN;
+  if (!redisUrl || !redisToken) return null;
+
+  const emailHash = createHash("sha256")
+    .update(email.trim().toLowerCase())
+    .digest("hex");
+
+  try {
+    const response = await fetch(
+      `${redisUrl.replace(/\/+$/, "")}/incr/${encodeURIComponent(`contact:${emailHash}`)}`,
+      { headers: { Authorization: `Bearer ${redisToken}` } },
+    );
+    const result = await response.json();
+    if (!response.ok || !Number.isSafeInteger(result.result) || result.result < 1) {
+      throw new Error("Invalid counter response.");
+    }
+    return result.result;
+  } catch {
+    console.error("Contact inquiry counter unavailable.");
+    return null;
+  }
+}
 
 export default {
   async fetch(request) {
@@ -13,6 +55,9 @@ export default {
     try {
       data = await request.json();
     } catch {
+      return Response.json({ error: "Invalid form submission." }, { status: 400 });
+    }
+    if (!data || typeof data !== "object" || Array.isArray(data)) {
       return Response.json({ error: "Invalid form submission." }, { status: 400 });
     }
 
@@ -56,13 +101,23 @@ export default {
       );
     }
 
+    const count = await getInquiryCount(email);
+    const title =
+      count === null
+        ? "<b>Contact Inquiry</b> <i>(counter unavailable)</i>"
+        : count === 1
+          ? "🆕 <b>New Inquiry</b>"
+          : `🔁 <b>Returning Visitor</b> (${ordinal(count)} message)`;
     const text = [
-      "New portfolio contact",
-      `Name: ${name}`,
-      `Email: ${email}`,
-      `Phone: ${phone}`,
-      "Message:",
-      message,
+      title,
+      "",
+      `👤 <b>Name:</b> ${escapeHtml(name)}`,
+      `📧 <b>Email:</b> ${escapeHtml(email)}`,
+      `📞 <b>Phone:</b> ${escapeHtml(phone)}`,
+      "",
+      `💬 <b>Message:</b>\n<i>${escapeHtml(message)}</i>`,
+      "",
+      `🕒 ${new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}`,
     ].join("\n");
 
     try {
@@ -71,7 +126,7 @@ export default {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ chat_id: chatId, text }),
+          body: JSON.stringify({ chat_id: chatId, text, parse_mode: "HTML" }),
         },
       );
       const result = await telegramResponse.json();
