@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/teleupload",
+      "destination": "/teleupload.html"
+    }
+  ]
+}

@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Send a file to Telegram with TeleUpload by B2GPT."
+    />
+    <title>TeleUpload | B2GPT</title>
+    <link rel="stylesheet" href="./assets/css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <style>
+      .teleupload-page * {
+        text-transform: none;
+      }
+      body.teleupload-page {
+        min-height: 100vh;
+        background: linear-gradient(to bottom, #000031, #00002c);
+        color: #fff;
+      }
+      .teleupload-page header {
+        padding-right: 9%;
+        padding-left: 9%;
+      }
+      .teleupload-page .teleupload-home {
+        color: #0e2431;
+        font-size: 1.5rem;
+        font-weight: 700;
+      }
+      .teleupload-page .teleupload-home i {
+        margin-right: 0.6rem;
+      }
+      .teleupload-main {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 10rem 2rem 4rem;
+      }
+      .teleupload-panel {
+        width: min(100%, 62rem);
+        min-height: 0;
+        padding: clamp(2.4rem, 6vw, 4.8rem);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 1rem;
+        background: rgba(255, 255, 255, 0.07);
+        box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.3);
+      }
+      .teleupload-kicker {
+        color: #ffe600;
+        font-size: 1.3rem;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .teleupload-panel h1 {
+        margin-top: 0.8rem;
+        color: #fff;
+        font-size: 3.8rem;
+        line-height: 1.2;
+      }
+      .teleupload-intro {
+        margin: 1rem 0 2.8rem;
+        color: #e8e8ff;
+        font-size: 1.5rem;
+        line-height: 1.7;
+      }
+      .teleupload-form label:not(.upload-drop) {
+        display: block;
+        margin: 1.8rem 0 0.7rem;
+        color: #fff;
+        font-size: 1.4rem;
+        font-weight: 600;
+      }
+      .upload-drop {
+        position: relative;
+        min-height: 15rem;
+        display: grid;
+        place-items: center;
+        padding: 2rem;
+        border: 2px dashed rgba(255, 230, 0, 0.65);
+        border-radius: 0.8rem;
+        color: #e8e8ff;
+        cursor: pointer;
+        text-align: center;
+        transition:
+          background 0.2s ease,
+          border-color 0.2s ease;
+      }
+      .upload-drop:hover,
+      .upload-drop.has-file {
+        border-color: #ffe600;
+        background: rgba(255, 230, 0, 0.07);
+      }
+      .upload-drop i {
+        display: block;
+        margin-bottom: 1rem;
+        color: #ffe600;
+        font-size: 3.2rem;
+      }
+      .upload-drop span {
+        display: block;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        font-size: 1.4rem;
+      }
+      .upload-drop input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+      }
+      .teleupload-form input[type="text"],
+      .teleupload-form input[type="password"] {
+        width: 100%;
+        min-height: 4.8rem;
+        padding: 1.2rem 1.4rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 0.6rem;
+        background: rgba(0, 0, 0, 0.18);
+        color: #fff;
+        font: inherit;
+        font-size: 1.5rem;
+        text-transform: none;
+      }
+      .teleupload-form input::placeholder {
+        color: #b9bfd1;
+      }
+      .teleupload-submit {
+        width: 100%;
+        min-height: 5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 2.2rem;
+        border-radius: 0.6rem;
+        background: #ffe600;
+        color: #080822;
+        cursor: pointer;
+        font: inherit;
+        font-size: 1.5rem;
+        font-weight: 700;
+      }
+      .teleupload-submit:hover {
+        background: #fff;
+      }
+      .teleupload-submit:disabled {
+        cursor: wait;
+        opacity: 0.65;
+      }
+      .teleupload-progress {
+        height: 0.6rem;
+        margin-top: 1.6rem;
+        overflow: hidden;
+        border-radius: 1rem;
+        background: rgba(255, 255, 255, 0.16);
+      }
+      .teleupload-progress[hidden] {
+        display: none;
+      }
+      .teleupload-progress span {
+        display: block;
+        width: 0;
+        height: 100%;
+        background: #ffe600;
+        transition: width 0.15s ease;
+      }
+      .teleupload-status {
+        min-height: 2.4rem;
+        margin-top: 1rem;
+        color: #e8e8ff;
+        font-size: 1.4rem;
+      }
+      .teleupload-status.success {
+        color: #8df0b0;
+      }
+      .teleupload-status.error {
+        color: #ffaaaa;
+      }
+      .teleupload-limit {
+        margin-top: 1.2rem;
+        color: #b9bfd1;
+        font-size: 1.2rem;
+        text-align: center;
+      }
+      @media (max-width: 600px) {
+        .teleupload-page header {
+          padding-right: 5%;
+          padding-left: 5%;
+        }
+        .teleupload-page .logo {
+          font-size: 1.6rem;
+        }
+        .teleupload-page .teleupload-home {
+          font-size: 1.3rem;
+        }
+        .teleupload-panel h1 {
+          font-size: 3.2rem;
+        }
+      }
+    </style>
+  </head>
+  <body class="teleupload-page">
+    <header>
+      <a href="/" class="logo"><i class="fas fa-code"></i> B2GPT</a>
+      <a href="/#work" class="teleupload-home">
+        <i class="fas fa-arrow-left"></i> Projects
+      </a>
+    </header>
+
+    <main class="teleupload-main">
+      <section class="teleupload-panel" aria-labelledby="teleupload-title">
+        <span class="teleupload-kicker">B2GPT Project</span>
+        <h1 id="teleupload-title">TeleUpload</h1>
+        <p class="teleupload-intro">
+          File chunein, title aur password dalein, phir Telegram par bhejein.
+        </p>
+
+        <form class="teleupload-form" id="teleuploadForm">
+          <label class="upload-drop" id="uploadDrop" for="file">
+            <span>
+              <i class="fas fa-cloud-upload-alt" aria-hidden="true"></i>
+              <span id="fileName">File chunne ke liye tap karein</span>
+            </span>
+            <input id="file" name="file" type="file" required />
+          </label>
+
+          <label for="title">Title / Caption</label>
+          <input
+            id="title"
+            name="title"
+            type="text"
+            maxlength="1024"
+            placeholder="File ke saath bhejne wala title"
+          />
+
+          <label for="password">Password</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            autocomplete="current-password"
+            required
+            placeholder="TeleUpload password"
+          />
+
+          <button class="teleupload-submit" id="sendButton" type="submit">
+            <span>Telegram par bhejein</span>
+            <i class="fab fa-telegram-plane" aria-hidden="true"></i>
+          </button>
+          <div class="teleupload-progress" id="progress" hidden>
+            <span id="progressFill"></span>
+          </div>
+          <p
+            class="teleupload-status"
+            id="status"
+            role="status"
+            aria-live="polite"
+          ></p>
+          <p class="teleupload-limit">Maximum file size: 4 MB</p>
+        </form>
+      </section>
+    </main>
+
+    <script>
+      const form = document.getElementById("teleuploadForm");
+      const fileInput = document.getElementById("file");
+      const fileName = document.getElementById("fileName");
+      const uploadDrop = document.getElementById("uploadDrop");
+      const sendButton = document.getElementById("sendButton");
+      const progress = document.getElementById("progress");
+      const progressFill = document.getElementById("progressFill");
+      const status = document.getElementById("status");
+      const maxFileSize = 4 * 1024 * 1024;
+
+      fileInput.addEventListener("change", () => {
+        const selectedFile = fileInput.files[0];
+        fileName.textContent = selectedFile
+          ? `${selectedFile.name} (${(selectedFile.size / 1048576).toFixed(1)} MB)`
+          : "File chunne ke liye tap karein";
+        uploadDrop.classList.toggle("has-file", Boolean(selectedFile));
+      });
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const selectedFile = fileInput.files[0];
+        if (!selectedFile) return;
+        if (selectedFile.size > maxFileSize) {
+          status.textContent = "File 4 MB se chhoti honi chahiye.";
+          status.className = "teleupload-status error";
+          return;
+        }
+
+        const request = new XMLHttpRequest();
+        request.open("POST", "/api/teleupload");
+        request.responseType = "json";
+        progress.hidden = false;
+        progressFill.style.width = "0%";
+        sendButton.disabled = true;
+        status.textContent = "File bheji ja rahi hai...";
+        status.className = "teleupload-status";
+
+        request.upload.addEventListener("progress", (progressEvent) => {
+          if (progressEvent.lengthComputable) {
+            progressFill.style.width = `${(progressEvent.loaded / progressEvent.total) * 100}%`;
+          }
+        });
+        request.addEventListener("load", () => {
+          sendButton.disabled = false;
+          if (
+            request.status >= 200 &&
+            request.status < 300 &&
+            request.response?.ok
+          ) {
+            status.textContent = "Telegram par bhej diya.";
+            status.className = "teleupload-status success";
+            form.reset();
+            fileInput.dispatchEvent(new Event("change"));
+          } else {
+            status.textContent =
+              request.response?.error ||
+              "File nahi bheji ja saki. Dobara try karein.";
+            status.className = "teleupload-status error";
+          }
+        });
+        request.addEventListener("error", () => {
+          sendButton.disabled = false;
+          status.textContent =
+            "Network error. Internet check karke dobara try karein.";
+          status.className = "teleupload-status error";
+        });
+        request.send(new FormData(form));
+      });
+    </script>
+  </body>
+</html>
