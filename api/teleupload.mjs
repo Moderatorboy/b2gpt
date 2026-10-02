@@ -1,6 +1,7 @@
 import { del, get } from "@vercel/blob";
 
 const UPLOAD_PREFIX = "teleupload/";
+const MAX_FILE_SIZE = 50 * 1024 * 1024; // Telegram Bot API limit for sendDocument
 
 function validUploadPath(pathname) {
   return (
@@ -43,7 +44,8 @@ export default {
       try {
         await del(data.pathname, { access: "private" });
         return Response.json({ ok: true });
-      } catch {
+      } catch (error) {
+        console.error("TeleUpload cleanup error:", error);
         return Response.json({ error: "Temporary file cleanup failed." }, { status: 502 });
       }
     }
@@ -84,7 +86,7 @@ export default {
       telegramForm.append(
         "document",
         new Blob([bytes], {
-          type: stored.blob.contentType || "application/octet-stream",
+          type: stored.blob?.contentType || "application/octet-stream",
         }),
         filename || "upload",
       );
@@ -95,13 +97,15 @@ export default {
       );
       const result = await telegramResponse.json();
       if (!telegramResponse.ok || !result.ok) {
+        console.error("Telegram rejected the file:", result);
         return Response.json(
           { error: "Telegram could not accept this file." },
           { status: 502 },
         );
       }
       return Response.json({ ok: true });
-    } catch {
+    } catch (error) {
+      console.error("TeleUpload error:", error);
       return Response.json(
         { error: "Could not send this file to Telegram." },
         { status: 502 },
@@ -109,8 +113,8 @@ export default {
     } finally {
       try {
         await del(data.pathname, { access: "private" });
-      } catch {
-        console.error("Could not delete a temporary TeleUpload blob.");
+      } catch (error) {
+        console.error("Could not delete a temporary TeleUpload blob:", error);
       }
     }
   },
