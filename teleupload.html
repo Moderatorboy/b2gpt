@@ -13,7 +13,30 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
     />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
+      /* base rules so the page also looks right without the site's style.css */
+      html {
+        font-size: 62.5%;
+      }
+      .teleupload-page,
+      .teleupload-page *,
+      .teleupload-page *::before,
+      .teleupload-page *::after {
+        box-sizing: border-box;
+      }
+      body.teleupload-page {
+        margin: 0;
+        font-family: "Poppins", system-ui, -apple-system, "Segoe UI", sans-serif;
+      }
+      .teleupload-layout > *,
+      .teleupload-col > * {
+        min-width: 0;
+      }
       .teleupload-page * {
         text-transform: none;
       }
@@ -40,8 +63,124 @@
         place-items: center;
         padding: 10rem 2rem 4rem;
       }
+      .teleupload-wrap {
+        width: min(100%, 112rem);
+      }
+      .teleupload-head {
+        margin-bottom: 2.4rem;
+      }
+      .teleupload-layout {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2.4rem;
+        align-items: start;
+      }
+      .teleupload-col {
+        display: flex;
+        flex-direction: column;
+        gap: 2.4rem;
+      }
+      #dropCard {
+        padding: 1.6rem;
+      }
+      .teleupload-form > label:first-child {
+        margin-top: 0;
+      }
+      .teleupload-card {
+        padding: clamp(2rem, 4vw, 3.2rem);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 1rem;
+        background: rgba(255, 255, 255, 0.07);
+        box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.3);
+      }
+      .teleupload-card h2 {
+        margin-bottom: 1.2rem;
+        color: #fff;
+        font-size: 2rem;
+        line-height: 1.3;
+      }
+      .side-hint {
+        color: #b9bfd1;
+        font-size: 1.4rem;
+        line-height: 1.7;
+      }
+      .bot-btn {
+        width: 100%;
+        min-height: 5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        border: 2px solid #ffe600;
+        border-radius: 0.6rem;
+        background: transparent;
+        color: #ffe600;
+        cursor: pointer;
+        font: inherit;
+        font-size: 1.5rem;
+        font-weight: 700;
+        transition:
+          background 0.2s ease,
+          color 0.2s ease;
+      }
+      .bot-btn:hover,
+      .bot-btn[aria-expanded="true"] {
+        background: #ffe600;
+        color: #080822;
+      }
+      .bot-panel {
+        margin-top: 1.8rem;
+        text-align: center;
+      }
+      .bot-panel[hidden] {
+        display: none;
+      }
+      .bot-panel img {
+        display: block;
+        width: min(100%, 26rem);
+        height: auto;
+        margin: 0 auto 1.4rem;
+        border-radius: 1.2rem;
+      }
+      .bot-panel a {
+        color: #ffe600;
+        font-size: 1.5rem;
+        font-weight: 600;
+        text-decoration: underline;
+        overflow-wrap: anywhere;
+      }
+      .bot-panel p {
+        margin-top: 1rem;
+        color: #b9bfd1;
+        font-size: 1.3rem;
+        line-height: 1.6;
+      }
+      .qr-wrap {
+        margin-top: 1.4rem;
+        text-align: center;
+      }
+      .qr-box {
+        display: inline-block;
+        padding: 1rem;
+        border-radius: 1rem;
+        background: #fff;
+        line-height: 0;
+      }
+      .qr-box img,
+      .qr-box canvas {
+        max-width: 100%;
+        height: auto;
+      }
+      .shot-icon {
+        display: block;
+        width: 2.8rem;
+        height: 2.8rem;
+        margin: 0 auto 0.8rem;
+        color: #e8e8ff;
+      }
       .teleupload-panel {
-        width: min(100%, 62rem);
+        width: 100%;
         min-height: 0;
         padding: clamp(2.4rem, 6vw, 4.8rem);
         border: 1px solid rgba(255, 255, 255, 0.14);
@@ -55,14 +194,14 @@
         font-weight: 700;
         text-transform: uppercase;
       }
-      .teleupload-panel h1 {
+      .teleupload-head h1 {
         margin-top: 0.8rem;
         color: #fff;
         font-size: 3.8rem;
         line-height: 1.2;
       }
       .teleupload-intro {
-        margin: 1rem 0 2.8rem;
+        margin: 1rem 0 0;
         color: #e8e8ff;
         font-size: 1.5rem;
         line-height: 1.7;
@@ -364,6 +503,26 @@
         font-size: 1.3rem;
         font-weight: 700;
       }
+      @media (max-width: 900px) {
+        .teleupload-layout {
+          grid-template-columns: 1fr;
+        }
+        .teleupload-col {
+          display: contents;
+        }
+        #dropCard {
+          order: 1;
+        }
+        #formPanel {
+          order: 2;
+        }
+        #linkCard {
+          order: 3;
+        }
+        #botCard {
+          order: 4;
+        }
+      }
       @media (max-width: 600px) {
         .teleupload-page header {
           padding-right: 5%;
@@ -375,7 +534,7 @@
         .teleupload-page .teleupload-home {
           font-size: 1.3rem;
         }
-        .teleupload-panel h1 {
+        .teleupload-head h1 {
           font-size: 3.2rem;
         }
       }
@@ -390,16 +549,89 @@
     </header>
 
     <main class="teleupload-main">
-      <section class="teleupload-panel" aria-labelledby="teleupload-title">
-        <span class="teleupload-kicker">B2GPT Project</span>
-        <h1 id="teleupload-title">TeleUpload</h1>
-        <p class="teleupload-intro">
-          File chunein, apna khud ka password chunein. File aapke password ke saath
-          zip hokar Telegram par jayegi, aur 15 minute ka download link milega.
+      <div class="teleupload-wrap">
+        <div class="teleupload-head">
+          <span class="teleupload-kicker">B2GPT Project</span>
+          <h1 id="teleupload-title">TeleUpload</h1>
+          <p class="teleupload-intro">
+          Ek ya zyada files chunein. Chahein to jise bhejni hai uska Telegram
+          username ya user id likhein, file zip hokar seedha us person ke Telegram
+          par jayegi. Download link 24 ghante tak chalega.
         </p>
+        </div>
 
-        <form class="teleupload-form" id="teleuploadForm">
-          <div
+        <div class="teleupload-layout">
+          <div class="teleupload-col">
+            <section class="teleupload-panel" id="formPanel" aria-labelledby="teleupload-title">
+              <form class="teleupload-form" id="teleuploadForm">
+          <label for="title">Title / Caption</label>
+          <input
+            id="title"
+            name="title"
+            type="text"
+            maxlength="700"
+            placeholder="File ke saath bhejne wala title"
+          />
+
+          <label for="linkname"
+            >Download link name <small>(optional)</small></label
+          >
+          <input
+            id="linkname"
+            name="linkname"
+            type="text"
+            maxlength="60"
+            autocomplete="off"
+            placeholder="jaise: forloop"
+          />
+
+          <label for="recipient"
+            >Telegram par bhejna hai? <small>(optional: @username ya user id)</small></label
+          >
+          <input
+            id="recipient"
+            name="recipient"
+            type="text"
+            maxlength="64"
+            autocomplete="off"
+            placeholder="jaise: @username ya 123456789"
+          />
+
+          <button class="teleupload-submit" id="sendButton" type="submit">
+            <span>Telegram par bhejein</span>
+            <i class="fab fa-telegram-plane" aria-hidden="true"></i>
+          </button>
+          <div class="teleupload-progress" id="progress" hidden>
+            <span id="progressFill"></span>
+          </div>
+          <p
+            class="teleupload-status"
+            id="status"
+            role="status"
+            aria-live="polite"
+          ></p>
+          <p class="teleupload-limit">
+            Maximum size: 1 GB (sab files milakar) | Download link 24 ghante valid
+          </p>
+          <p class="teleupload-limit">
+            Telegram par bhejne ke liye us person ne pehle hamara bot start kiya
+            hona chahiye. Username ya user id khaali chhodoge to sirf link banega.
+          </p>
+        </form>
+            </section>
+
+            <section class="teleupload-card" id="linkCard" aria-labelledby="linkHeading">
+          <h2 id="linkHeading">Download link</h2>
+          <p class="side-hint" id="linkHint">
+            Upload poora hone ke baad yahan aapka link aur QR code dikhega.
+          </p>
+          <div class="teleupload-result" id="result" hidden></div>
+        </section>
+          </div>
+
+          <div class="teleupload-col">
+            <section class="teleupload-card" id="dropCard" aria-label="File chunein">
+              <div
             class="shot-zone"
             id="uploadDrop"
             role="button"
@@ -407,8 +639,17 @@
             aria-label="File chunne ke liye tap karein ya file yahan drop karein"
           >
             <div class="shot-text">
-              <i class="fas fa-upload" aria-hidden="true"></i>
-              <span class="shot-title" id="shotTitle">Drop file here</span>
+              <svg class="shot-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M12 16V4m0 0L7 9m5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              <span class="shot-title" id="shotTitle">Drop files here</span>
               <span class="shot-sub" id="shotSub">or take the shot</span>
             </div>
             <svg
@@ -451,72 +692,47 @@
               <em>FILE</em>
             </div>
           </div>
-          <input class="shot-input" id="file" name="file" type="file" />
+          <input class="shot-input" id="file" name="file" type="file" multiple form="teleuploadForm" />
+            </section>
 
-          <label for="title">Title / Caption</label>
-          <input
-            id="title"
-            name="title"
-            type="text"
-            maxlength="700"
-            placeholder="File ke saath bhejne wala title"
-          />
-
-          <label for="linkname"
-            >Download link name <small>(optional)</small></label
+            <section class="teleupload-card" id="botCard" aria-labelledby="botHeading">
+          <h2 id="botHeading">Telegram bot</h2>
+          <button
+            class="bot-btn"
+            id="botBtn"
+            type="button"
+            aria-expanded="false"
+            aria-controls="botPanel"
           >
-          <input
-            id="linkname"
-            name="linkname"
-            type="text"
-            maxlength="60"
-            autocomplete="off"
-            placeholder="jaise: forloop"
-          />
-
-          <label for="password"
-            >Zip password <small>(aapka apna, 4+ characters)</small></label
-          >
-          <input
-            id="password"
-            name="password"
-            type="password"
-            autocomplete="new-password"
-            minlength="4"
-            maxlength="128"
-            required
-            placeholder="File kholne ke liye ye password lagega"
-          />
-
-          <button class="teleupload-submit" id="sendButton" type="submit">
-            <span>Telegram par bhejein</span>
             <i class="fab fa-telegram-plane" aria-hidden="true"></i>
+            <span>@B2GETFILES_BOT kholein</span>
           </button>
-          <div class="teleupload-progress" id="progress" hidden>
-            <span id="progressFill"></span>
+          <div class="bot-panel" id="botPanel" hidden>
+            <img
+              src="/assets/images/bot-qr.png"
+              alt="@B2GETFILES_BOT ka QR code"
+              width="260"
+              loading="lazy"
+            />
+            <a href="https://t.me/B2GETFILES_BOT" target="_blank" rel="noopener"
+              >https://t.me/B2GETFILES_BOT</a
+            >
+            <p>
+              QR scan karein ya link kholkar bot ko Start karein, tabhi aapko
+              Telegram par files milengi.
+            </p>
           </div>
-          <p
-            class="teleupload-status"
-            id="status"
-            role="status"
-            aria-live="polite"
-          ></p>
-          <p class="teleupload-limit">
-            Maximum file size: 1 GB | Download link 15 minute valid
-          </p>
-          <p class="teleupload-limit">
-            Password yaad rakhein: bhoolne par file khul nahi paayegi (7-Zip ya
-            WinRAR se kholein).
-          </p>
-          <div class="teleupload-result" id="result" hidden></div>
-        </form>
-      </section>
+        </section>
+          </div>
+        </div>
+      </div>
     </main>
 
     <script>
       const API = "https://api.b2gpt.online";
       const CHUNK = 8 * 1024 * 1024;
-      const MAX_FILE_SIZE = 1024 * 1024 * 1024;
+      const MAX_FILE_SIZE = 1024 * 1024 * 1024; // total, all files together
+      const MAX_FILES = 20;
 
       const form = document.getElementById("teleuploadForm");
       const fileInput = document.getElementById("file");
@@ -525,12 +741,21 @@
       const uploadDrop = document.getElementById("uploadDrop");
       const titleInput = document.getElementById("title");
       const linkInput = document.getElementById("linkname");
-      const passwordInput = document.getElementById("password");
+      const recipientInput = document.getElementById("recipient");
       const sendButton = document.getElementById("sendButton");
       const progress = document.getElementById("progress");
       const progressFill = document.getElementById("progressFill");
       const statusEl = document.getElementById("status");
       const resultEl = document.getElementById("result");
+      const linkHint = document.getElementById("linkHint");
+      const botBtn = document.getElementById("botBtn");
+      const botPanel = document.getElementById("botPanel");
+
+      botBtn.addEventListener("click", () => {
+        const open = botPanel.hidden;
+        botPanel.hidden = !open;
+        botBtn.setAttribute("aria-expanded", String(open));
+      });
 
       const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -555,17 +780,22 @@
           data = await res.json();
         } catch {}
         if (!res.ok) {
-          const detail = data && typeof data.detail === "string" ? data.detail : "";
-          throw new Error(detail || "Kuch galat ho gaya. Dobara try karein.");
+          const d = data && data.detail;
+          const err = new Error(
+            (typeof d === "string" ? d : d && d.message) ||
+              "Kuch galat ho gaya. Dobara try karein.",
+          );
+          if (d && typeof d === "object" && d.bot_link) err.botLink = d.bot_link;
+          throw err;
         }
         return data;
       }
 
-      async function sendChunk(id, file, offset) {
+      async function sendChunk(id, file, fileIndex, offset) {
         const blob = file.slice(offset, offset + CHUNK);
         for (let attempt = 1; ; attempt++) {
           try {
-            await api(`/upload/${id}/chunk?offset=${offset}`, {
+            await api(`/upload/${id}/chunk?file=${fileIndex}&offset=${offset}`, {
               method: "POST",
               headers: { "Content-Type": "application/octet-stream" },
               body: blob,
@@ -578,16 +808,41 @@
         }
       }
 
-      function showDone(link) {
-        setStatus("Telegram par bhej diya.", "success");
+      function showDone(link, delivered) {
+        setStatus(
+          delivered ? "Us person ke Telegram par bhej diya." : "Link ban gaya.",
+          "success",
+        );
         resultEl.replaceChildren();
         const label = document.createElement("p");
-        label.textContent = "Aapka download link (15 minute valid):";
+        label.textContent = "Aapka download link (24 ghante valid):";
         const a = document.createElement("a");
         a.href = link;
         a.textContent = link;
         a.target = "_blank";
         a.rel = "noopener";
+
+        const qrWrap = document.createElement("div");
+        qrWrap.className = "qr-wrap";
+        const qrBox = document.createElement("div");
+        qrBox.className = "qr-box";
+        qrWrap.appendChild(qrBox);
+        if (typeof QRCode === "function") {
+          new QRCode(qrBox, {
+            text: link,
+            width: 180,
+            height: 180,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.M,
+          });
+        } else {
+          qrWrap.hidden = true;
+        }
+        const qrNote = document.createElement("p");
+        qrNote.textContent = "Phone se QR scan karke bhi download kar sakte hain.";
+        qrNote.style.marginTop = "0.8rem";
+
         const copy = document.createElement("button");
         copy.type = "button";
         copy.className = "teleupload-copy";
@@ -600,17 +855,28 @@
             copy.textContent = "Copy nahi hua, link select karein";
           }
         });
-        resultEl.append(label, a, copy);
+        resultEl.append(label, a, qrWrap, qrNote, copy);
+        linkHint.hidden = true;
         resultEl.hidden = false;
+        if (window.matchMedia("(max-width: 900px)").matches) {
+          resultEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
       }
 
       function updateFileLabel() {
-        const f = fileInput.files[0];
-        shotTitle.textContent = f ? f.name : "Drop file here";
-        shotSub.textContent = f
-          ? `${(f.size / 1048576).toFixed(1)} MB | badalne ke liye dobara shot lagayein`
-          : "or take the shot";
-        uploadDrop.classList.toggle("has-file", Boolean(f));
+        const list = Array.from(fileInput.files);
+        const total = list.reduce((sum, f) => sum + f.size, 0);
+        if (list.length === 0) {
+          shotTitle.textContent = "Drop files here";
+          shotSub.textContent = "or take the shot";
+        } else if (list.length === 1) {
+          shotTitle.textContent = list[0].name;
+          shotSub.textContent = `${(total / 1048576).toFixed(1)} MB | badalne ke liye dobara shot lagayein`;
+        } else {
+          shotTitle.textContent = `${list.length} files`;
+          shotSub.textContent = `Kul ${(total / 1048576).toFixed(1)} MB | badalne ke liye dobara shot lagayein`;
+        }
+        uploadDrop.classList.toggle("has-file", list.length > 0);
       }
 
       fileInput.addEventListener("change", updateFileLabel);
@@ -810,26 +1076,28 @@
 
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
-        const file = fileInput.files[0];
-        if (!file) {
+        const list = Array.from(fileInput.files);
+        if (!list.length) {
           setStatus("Pehle file chunein (file ko hoop mein daalein).", "error");
           return;
         }
-        if (passwordInput.value.length < 4) {
-          setStatus("Password kam se kam 4 characters ka rakhein.", "error");
+        if (list.length > MAX_FILES) {
+          setStatus(`Ek baar mein sirf ${MAX_FILES} files bhej sakte hain.`, "error");
           return;
         }
-        if (file.size === 0) {
-          setStatus("File khaali hai.", "error");
+        if (list.some((f) => f.size === 0)) {
+          setStatus("Koi file khaali hai. Use hata dein.", "error");
           return;
         }
-        if (file.size > MAX_FILE_SIZE) {
-          setStatus("File 1 GB se chhoti honi chahiye.", "error");
+        const total = list.reduce((sum, f) => sum + f.size, 0);
+        if (total > MAX_FILE_SIZE) {
+          setStatus("Sabhi files milakar 1 GB se chhoti honi chahiye.", "error");
           return;
         }
 
         resultEl.hidden = true;
         resultEl.replaceChildren();
+        linkHint.hidden = false;
         sendButton.disabled = true;
         progress.hidden = false;
         setProgress(0);
@@ -840,22 +1108,24 @@
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              filename: file.name,
-              size: file.size,
-              password: passwordInput.value,
+              files: list.map((f) => ({ name: f.name, size: f.size })),
+              recipient: recipientInput.value.trim(),
               title: titleInput.value.trim(),
               linkname: linkInput.value.trim(),
             }),
           });
           const id = init.upload_id;
 
-          for (let offset = 0; offset < file.size; offset += CHUNK) {
-            await sendChunk(id, file, offset);
-            const pct = Math.round(
-              (Math.min(offset + CHUNK, file.size) / file.size) * 100,
-            );
-            setProgress(pct);
-            setStatus(`Server par upload ho raha hai... ${pct}%`);
+          let sent = 0;
+          for (let i = 0; i < list.length; i++) {
+            const file = list[i];
+            for (let offset = 0; offset < file.size; offset += CHUNK) {
+              await sendChunk(id, file, i, offset);
+              sent += Math.min(CHUNK, file.size - offset);
+              const pct = Math.round((sent / total) * 100);
+              setProgress(pct);
+              setStatus(`Server par upload ho raha hai... ${pct}%`);
+            }
           }
 
           await api(`/upload/${id}/finish`, { method: "POST" });
@@ -874,14 +1144,15 @@
             }
             if (s.state === "queued" || s.state === "zipping") {
               setProgress(0);
-              setStatus("Zip ban rahi hai (password ke saath)...");
+              setStatus("Zip ban rahi hai...");
             } else if (s.state === "sending") {
               setProgress(s.progress);
-              setStatus(`Telegram par upload ho raha hai... ${s.progress}%`);
+              setStatus(`Telegram par bheji ja rahi hai... ${s.progress}%`);
             } else if (s.state === "done") {
               setProgress(100);
-              showDone(s.link);
+              showDone(s.link, s.delivered);
               form.reset();
+              fileInput.value = "";
               updateFileLabel();
               break;
             } else if (s.state === "error") {
@@ -890,6 +1161,14 @@
           }
         } catch (err) {
           setStatus(err.message, "error");
+          if (err.botLink) {
+            const a = document.createElement("a");
+            a.href = err.botLink;
+            a.textContent = " Bot kholein";
+            a.target = "_blank";
+            a.rel = "noopener";
+            statusEl.appendChild(a);
+          }
         } finally {
           sendButton.disabled = false;
         }
