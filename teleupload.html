@@ -1,0 +1,905 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Send a file to Telegram with TeleUpload by B2GPT."
+    />
+    <title>TeleUpload | B2GPT</title>
+    <link rel="stylesheet" href="./assets/css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <style>
+      .teleupload-page * {
+        text-transform: none;
+      }
+      body.teleupload-page {
+        min-height: 100vh;
+        background: linear-gradient(to bottom, #000031, #00002c);
+        color: #fff;
+      }
+      .teleupload-page header {
+        padding-right: 9%;
+        padding-left: 9%;
+      }
+      .teleupload-page .teleupload-home {
+        color: #0e2431;
+        font-size: 1.5rem;
+        font-weight: 700;
+      }
+      .teleupload-page .teleupload-home i {
+        margin-right: 0.6rem;
+      }
+      .teleupload-main {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 10rem 2rem 4rem;
+      }
+      .teleupload-panel {
+        width: min(100%, 62rem);
+        min-height: 0;
+        padding: clamp(2.4rem, 6vw, 4.8rem);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 1rem;
+        background: rgba(255, 255, 255, 0.07);
+        box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.3);
+      }
+      .teleupload-kicker {
+        color: #ffe600;
+        font-size: 1.3rem;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .teleupload-panel h1 {
+        margin-top: 0.8rem;
+        color: #fff;
+        font-size: 3.8rem;
+        line-height: 1.2;
+      }
+      .teleupload-intro {
+        margin: 1rem 0 2.8rem;
+        color: #e8e8ff;
+        font-size: 1.5rem;
+        line-height: 1.7;
+      }
+      .teleupload-form label:not(.upload-drop) {
+        display: block;
+        margin: 1.8rem 0 0.7rem;
+        color: #fff;
+        font-size: 1.4rem;
+        font-weight: 600;
+      }
+      .teleupload-form label small {
+        color: #b9bfd1;
+        font-weight: 400;
+      }
+      .shot-zone {
+        position: relative;
+        height: 400px;
+        overflow: hidden;
+        border: 2px dashed rgba(255, 255, 255, 0.28);
+        border-radius: 1.4rem;
+        background: rgba(255, 255, 255, 0.05);
+        cursor: pointer;
+        text-align: center;
+        user-select: none;
+        -webkit-user-select: none;
+        transition:
+          background 0.2s ease,
+          border-color 0.2s ease;
+      }
+      .shot-zone:hover,
+      .shot-zone:focus-visible,
+      .shot-zone.dragover {
+        border-color: #ffe600;
+        background: rgba(255, 230, 0, 0.07);
+        outline: none;
+      }
+      .shot-text {
+        position: relative;
+        z-index: 1;
+        padding: 2.2rem 2rem 0;
+        pointer-events: none;
+      }
+      .shot-text i {
+        display: block;
+        margin-bottom: 0.8rem;
+        color: #e8e8ff;
+        font-size: 2.4rem;
+      }
+      .shot-title {
+        display: block;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        color: #fff;
+        font-size: 1.8rem;
+        font-weight: 600;
+      }
+      .shot-sub {
+        display: block;
+        margin-top: 0.4rem;
+        color: #b9bfd1;
+        font-size: 1.3rem;
+      }
+      .shot-hoop {
+        position: absolute;
+        left: 50%;
+        top: 150px;
+        transform: translateX(-50%);
+        pointer-events: none;
+      }
+      .shot-hoop .net line {
+        stroke: rgba(255, 255, 255, 0.45);
+        stroke-width: 2;
+      }
+      .shot-hoop .net {
+        transform-box: fill-box;
+        transform-origin: 50% 0;
+      }
+      .shot-hoop .rim {
+        fill: none;
+        stroke: #f26a21;
+        stroke-width: 6;
+        transition: stroke 0.2s ease;
+      }
+      .shot-hoop .board {
+        fill: #fff;
+        stroke: #f26a21;
+        stroke-width: 3;
+      }
+      .shot-hoop .joint {
+        fill: #f26a21;
+      }
+      .shot-zone.dragover .rim {
+        stroke: #ffe600;
+      }
+      .shot-hoop.swish .net {
+        animation: swish 0.55s ease;
+      }
+      @keyframes swish {
+        30% {
+          transform: scale(0.9, 1.1);
+        }
+        60% {
+          transform: scale(1.05, 0.95);
+        }
+      }
+      .shot-card,
+      .shot-ghost {
+        position: absolute;
+        z-index: 3;
+        width: 62px;
+        height: 78px;
+        padding: 12px 9px;
+        border-radius: 8px;
+        background: #fff;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+      }
+      .shot-card {
+        left: 9%;
+        bottom: 24px;
+        cursor: grab;
+        touch-action: none;
+      }
+      .shot-card.grabbing {
+        cursor: grabbing;
+        z-index: 4;
+      }
+      .shot-ghost {
+        pointer-events: none;
+      }
+      .shot-card span.bar,
+      .shot-ghost span.bar {
+        display: block;
+        height: 4px;
+        margin-bottom: 6px;
+        border-radius: 2px;
+        background: #d5d8e0;
+      }
+      .shot-card em,
+      .shot-ghost em {
+        position: absolute;
+        left: 50%;
+        bottom: -9px;
+        transform: translateX(-50%);
+        padding: 2px 8px;
+        border-radius: 4px;
+        background: #ff3b5c;
+        color: #fff;
+        font-size: 10px;
+        font-style: normal;
+        font-weight: 700;
+      }
+      .shot-card i {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        color: #111;
+        font-size: 22px;
+        pointer-events: none;
+      }
+      .shot-dot {
+        position: absolute;
+        z-index: 2;
+        width: 7px;
+        height: 7px;
+        margin: -3px 0 0 -3px;
+        border-radius: 50%;
+        background: #f26a21;
+        pointer-events: none;
+        animation: dotfade 1s ease forwards;
+      }
+      .shot-dot.gray {
+        background: #9aa0b5;
+      }
+      @keyframes dotfade {
+        to {
+          opacity: 0;
+        }
+      }
+      .shot-input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+      }
+      .teleupload-form input[type="text"],
+      .teleupload-form input[type="password"] {
+        width: 100%;
+        min-height: 4.8rem;
+        padding: 1.2rem 1.4rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 0.6rem;
+        background: rgba(0, 0, 0, 0.18);
+        color: #fff;
+        font: inherit;
+        font-size: 1.5rem;
+        text-transform: none;
+      }
+      .teleupload-form input::placeholder {
+        color: #b9bfd1;
+      }
+      .teleupload-submit {
+        width: 100%;
+        min-height: 5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 2.2rem;
+        border-radius: 0.6rem;
+        background: #ffe600;
+        color: #080822;
+        cursor: pointer;
+        font: inherit;
+        font-size: 1.5rem;
+        font-weight: 700;
+      }
+      .teleupload-submit:hover {
+        background: #fff;
+      }
+      .teleupload-submit:disabled {
+        cursor: wait;
+        opacity: 0.65;
+      }
+      .teleupload-progress {
+        height: 0.6rem;
+        margin-top: 1.6rem;
+        overflow: hidden;
+        border-radius: 1rem;
+        background: rgba(255, 255, 255, 0.16);
+      }
+      .teleupload-progress[hidden] {
+        display: none;
+      }
+      .teleupload-progress span {
+        display: block;
+        width: 0;
+        height: 100%;
+        background: #ffe600;
+        transition: width 0.15s ease;
+      }
+      .teleupload-status {
+        min-height: 2.4rem;
+        margin-top: 1rem;
+        color: #e8e8ff;
+        font-size: 1.4rem;
+        overflow-wrap: anywhere;
+      }
+      .teleupload-status a {
+        color: #ffe600;
+        text-decoration: underline;
+      }
+      .teleupload-status.success {
+        color: #8df0b0;
+      }
+      .teleupload-status.error {
+        color: #ffaaaa;
+      }
+      .teleupload-limit {
+        margin-top: 1.2rem;
+        color: #b9bfd1;
+        font-size: 1.2rem;
+        text-align: center;
+      }
+      .teleupload-result {
+        margin-top: 1.8rem;
+        padding: 1.6rem;
+        border: 1px solid rgba(141, 240, 176, 0.5);
+        border-radius: 0.8rem;
+        background: rgba(141, 240, 176, 0.08);
+        text-align: center;
+      }
+      .teleupload-result[hidden] {
+        display: none;
+      }
+      .teleupload-result p {
+        margin-bottom: 0.8rem;
+        color: #8df0b0;
+        font-size: 1.3rem;
+      }
+      .teleupload-result a {
+        display: block;
+        color: #ffe600;
+        font-size: 1.5rem;
+        font-weight: 600;
+        text-decoration: underline;
+        overflow-wrap: anywhere;
+      }
+      .teleupload-copy {
+        margin-top: 1.2rem;
+        padding: 0.8rem 2rem;
+        border-radius: 0.6rem;
+        background: #ffe600;
+        color: #080822;
+        cursor: pointer;
+        font: inherit;
+        font-size: 1.3rem;
+        font-weight: 700;
+      }
+      @media (max-width: 600px) {
+        .teleupload-page header {
+          padding-right: 5%;
+          padding-left: 5%;
+        }
+        .teleupload-page .logo {
+          font-size: 1.6rem;
+        }
+        .teleupload-page .teleupload-home {
+          font-size: 1.3rem;
+        }
+        .teleupload-panel h1 {
+          font-size: 3.2rem;
+        }
+      }
+    </style>
+  </head>
+  <body class="teleupload-page">
+    <header>
+      <a href="/" class="logo"><i class="fas fa-code"></i> B2GPT</a>
+      <a href="/#work" class="teleupload-home">
+        <i class="fas fa-arrow-left"></i> Projects
+      </a>
+    </header>
+
+    <main class="teleupload-main">
+      <section class="teleupload-panel" aria-labelledby="teleupload-title">
+        <span class="teleupload-kicker">B2GPT Project</span>
+        <h1 id="teleupload-title">TeleUpload</h1>
+        <p class="teleupload-intro">
+          File chunein, title aur password dalein. File zip hokar Telegram par
+          jayegi, aur 15 minute ka download link milega.
+        </p>
+
+        <form class="teleupload-form" id="teleuploadForm">
+          <div
+            class="shot-zone"
+            id="uploadDrop"
+            role="button"
+            tabindex="0"
+            aria-label="File chunne ke liye tap karein ya file yahan drop karein"
+          >
+            <div class="shot-text">
+              <i class="fas fa-upload" aria-hidden="true"></i>
+              <span class="shot-title" id="shotTitle">Drop file here</span>
+              <span class="shot-sub" id="shotSub">or take the shot</span>
+            </div>
+            <svg
+              class="shot-hoop"
+              id="hoop"
+              viewBox="0 0 200 220"
+              width="200"
+              height="220"
+              aria-hidden="true"
+            >
+              <g class="net">
+                <line x1="52" y1="86" x2="76" y2="200" />
+                <line x1="52" y1="86" x2="84" y2="200" />
+                <line x1="68" y1="86" x2="76" y2="200" />
+                <line x1="68" y1="86" x2="84" y2="200" />
+                <line x1="68" y1="86" x2="92" y2="200" />
+                <line x1="84" y1="86" x2="84" y2="200" />
+                <line x1="84" y1="86" x2="92" y2="200" />
+                <line x1="84" y1="86" x2="100" y2="200" />
+                <line x1="100" y1="86" x2="92" y2="200" />
+                <line x1="100" y1="86" x2="100" y2="200" />
+                <line x1="100" y1="86" x2="108" y2="200" />
+                <line x1="116" y1="86" x2="100" y2="200" />
+                <line x1="116" y1="86" x2="108" y2="200" />
+                <line x1="116" y1="86" x2="116" y2="200" />
+                <line x1="132" y1="86" x2="108" y2="200" />
+                <line x1="132" y1="86" x2="116" y2="200" />
+                <line x1="132" y1="86" x2="124" y2="200" />
+                <line x1="148" y1="86" x2="116" y2="200" />
+                <line x1="148" y1="86" x2="124" y2="200" />
+              </g>
+              <rect class="board" x="45" y="4" width="110" height="70" rx="3" />
+              <rect class="joint" x="92" y="74" width="16" height="8" />
+              <ellipse class="rim" cx="100" cy="86" rx="52" ry="9" />
+            </svg>
+            <div class="shot-card" id="shotCard" aria-hidden="true">
+              <span class="bar"></span><span class="bar"></span
+              ><span class="bar"></span>
+              <i class="far fa-hand-rock"></i>
+              <em>FILE</em>
+            </div>
+          </div>
+          <input class="shot-input" id="file" name="file" type="file" />
+
+          <label for="title">Title / Caption</label>
+          <input
+            id="title"
+            name="title"
+            type="text"
+            maxlength="700"
+            placeholder="File ke saath bhejne wala title"
+          />
+
+          <label for="linkname"
+            >Download link name <small>(optional)</small></label
+          >
+          <input
+            id="linkname"
+            name="linkname"
+            type="text"
+            maxlength="60"
+            autocomplete="off"
+            placeholder="jaise: forloop"
+          />
+
+          <label for="password">Password</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            autocomplete="current-password"
+            required
+            placeholder="TeleUpload password (zip ka bhi yahi password)"
+          />
+
+          <button class="teleupload-submit" id="sendButton" type="submit">
+            <span>Telegram par bhejein</span>
+            <i class="fab fa-telegram-plane" aria-hidden="true"></i>
+          </button>
+          <div class="teleupload-progress" id="progress" hidden>
+            <span id="progressFill"></span>
+          </div>
+          <p
+            class="teleupload-status"
+            id="status"
+            role="status"
+            aria-live="polite"
+          ></p>
+          <p class="teleupload-limit">
+            Maximum file size: 1 GB | Download link 15 minute valid
+          </p>
+          <div class="teleupload-result" id="result" hidden></div>
+        </form>
+      </section>
+    </main>
+
+    <script>
+      const API = "https://api.b2gpt.online";
+      const CHUNK = 8 * 1024 * 1024;
+      const MAX_FILE_SIZE = 1024 * 1024 * 1024;
+
+      const form = document.getElementById("teleuploadForm");
+      const fileInput = document.getElementById("file");
+      const shotTitle = document.getElementById("shotTitle");
+      const shotSub = document.getElementById("shotSub");
+      const uploadDrop = document.getElementById("uploadDrop");
+      const titleInput = document.getElementById("title");
+      const linkInput = document.getElementById("linkname");
+      const passwordInput = document.getElementById("password");
+      const sendButton = document.getElementById("sendButton");
+      const progress = document.getElementById("progress");
+      const progressFill = document.getElementById("progressFill");
+      const statusEl = document.getElementById("status");
+      const resultEl = document.getElementById("result");
+
+      const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+      function setStatus(text, cls = "") {
+        statusEl.textContent = text;
+        statusEl.className = "teleupload-status " + cls;
+      }
+
+      function setProgress(pct) {
+        progressFill.style.width = `${pct}%`;
+      }
+
+      async function api(path, options) {
+        let res;
+        try {
+          res = await fetch(API + path, options);
+        } catch {
+          throw new Error(
+            "Network error. Internet check karke dobara try karein.",
+          );
+        }
+        let data = null;
+        try {
+          data = await res.json();
+        } catch {}
+        if (!res.ok) {
+          const detail =
+            data && typeof data.detail === "string" ? data.detail : "";
+          throw new Error(detail || "Kuch galat ho gaya. Dobara try karein.");
+        }
+        return data;
+      }
+
+      async function sendChunk(id, file, offset) {
+        const blob = file.slice(offset, offset + CHUNK);
+        for (let attempt = 1; ; attempt++) {
+          try {
+            await api(`/upload/${id}/chunk?offset=${offset}`, {
+              method: "POST",
+              headers: { "Content-Type": "application/octet-stream" },
+              body: blob,
+            });
+            return;
+          } catch (err) {
+            if (attempt >= 3) throw err;
+            await sleep(1500 * attempt);
+          }
+        }
+      }
+
+      function showDone(link) {
+        setStatus("Telegram par bhej diya.", "success");
+        resultEl.replaceChildren();
+        const label = document.createElement("p");
+        label.textContent = "Aapka download link (15 minute valid):";
+        const a = document.createElement("a");
+        a.href = link;
+        a.textContent = link;
+        a.target = "_blank";
+        a.rel = "noopener";
+        const copy = document.createElement("button");
+        copy.type = "button";
+        copy.className = "teleupload-copy";
+        copy.textContent = "Link copy karein";
+        copy.addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText(link);
+            copy.textContent = "Copy ho gaya";
+          } catch {
+            copy.textContent = "Copy nahi hua, link select karein";
+          }
+        });
+        resultEl.append(label, a, copy);
+        resultEl.hidden = false;
+      }
+
+      function updateFileLabel() {
+        const f = fileInput.files[0];
+        shotTitle.textContent = f ? f.name : "Drop file here";
+        shotSub.textContent = f
+          ? `${(f.size / 1048576).toFixed(1)} MB | badalne ke liye dobara shot lagayein`
+          : "or take the shot";
+        uploadDrop.classList.toggle("has-file", Boolean(f));
+      }
+
+      fileInput.addEventListener("change", updateFileLabel);
+
+      /* ---------- basketball drop zone ---------- */
+      const hoop = document.getElementById("hoop");
+      const card = document.getElementById("shotCard");
+      const reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+
+      function openPicker() {
+        try {
+          fileInput.click();
+        } catch {}
+      }
+
+      function rimPoint() {
+        const r = hoop.getBoundingClientRect();
+        return { x: r.left + r.width / 2, y: r.top + r.height * (86 / 220) };
+      }
+
+      function swish() {
+        hoop.classList.remove("swish");
+        void hoop.getBoundingClientRect();
+        hoop.classList.add("swish");
+      }
+
+      function addDot(x, y, n) {
+        const z = uploadDrop.getBoundingClientRect();
+        const d = document.createElement("span");
+        d.className = "shot-dot" + (n % 4 === 3 ? " gray" : "");
+        d.style.left = `${x - z.left}px`;
+        d.style.top = `${y - z.top}px`;
+        d.addEventListener("animationend", () => d.remove());
+        uploadDrop.appendChild(d);
+      }
+
+      uploadDrop.addEventListener("click", (e) => {
+        if (e.target.closest("#shotCard")) return;
+        openPicker();
+      });
+      uploadDrop.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          openPicker();
+        }
+      });
+
+      let drag = null;
+
+      card.addEventListener("pointerdown", (e) => {
+        if (e.pointerType === "mouse" && e.button !== 0) return;
+        e.preventDefault();
+        e.stopPropagation();
+        card.setPointerCapture(e.pointerId);
+        const cr = card.getBoundingClientRect();
+        const ox = cr.left + cr.width / 2;
+        const oy = cr.top + cr.height / 2;
+        drag = {
+          ox,
+          oy,
+          dx: e.clientX - ox,
+          dy: e.clientY - oy,
+          tx: 0,
+          ty: 0,
+          travel: 0,
+          dots: 0,
+          last: { x: e.clientX, y: e.clientY },
+        };
+        card.classList.add("grabbing");
+        card.style.transition = "none";
+      });
+
+      card.addEventListener("pointermove", (e) => {
+        if (!drag) return;
+        drag.tx = e.clientX - drag.dx - drag.ox;
+        drag.ty = e.clientY - drag.dy - drag.oy;
+        const tilt = Math.max(
+          -18,
+          Math.min(18, (e.clientX - drag.last.x) * 1.5),
+        );
+        card.style.transform = `translate(${drag.tx}px, ${drag.ty}px) rotate(${tilt}deg)`;
+        const moved = Math.hypot(
+          e.clientX - drag.last.x,
+          e.clientY - drag.last.y,
+        );
+        drag.travel += moved;
+        if (moved >= 16) {
+          addDot(drag.ox + drag.tx, drag.oy + drag.ty, drag.dots++);
+          drag.last = { x: e.clientX, y: e.clientY };
+        }
+      });
+
+      function endDrag(e) {
+        if (!drag) return;
+        const d = drag;
+        drag = null;
+        card.classList.remove("grabbing");
+        if (d.travel < 6) {
+          card.style.transform = "";
+          openPicker();
+          return;
+        }
+        const rim = rimPoint();
+        const cx = d.ox + d.tx;
+        const cy = d.oy + d.ty;
+        if (Math.hypot(cx - rim.x, cy - rim.y) < 120) {
+          scoreFrom(d.tx, d.ty, rim, d);
+        } else {
+          card.style.transition = "transform 0.4s cubic-bezier(.34,1.56,.64,1)";
+          card.style.transform = "translate(0, 0)";
+        }
+      }
+      card.addEventListener("pointerup", endDrag);
+      card.addEventListener("pointercancel", endDrag);
+
+      function resetCard() {
+        card.style.transition = "none";
+        card.style.transform = "";
+        card.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 300 });
+      }
+
+      function scoreFrom(tx, ty, rim, d) {
+        if (reduceMotion) {
+          resetCard();
+          openPicker();
+          return;
+        }
+        const toX = rim.x - d.ox;
+        const toY = rim.y - d.oy;
+        card.style.transition = "none";
+        card
+          .animate(
+            [
+              { transform: `translate(${tx}px, ${ty}px)` },
+              {
+                transform: `translate(${toX}px, ${toY}px) scale(0.75)`,
+                offset: 0.45,
+              },
+              {
+                transform: `translate(${toX}px, ${toY + 90}px) scale(0.35)`,
+                opacity: 0,
+              },
+            ],
+            { duration: 700, easing: "ease-in", fill: "forwards" },
+          )
+          .finished.then(() => {
+            swish();
+            resetCard();
+            openPicker();
+          });
+      }
+
+      /* real file dragged in from the desktop */
+      ["dragenter", "dragover"].forEach((ev) =>
+        uploadDrop.addEventListener(ev, (e) => {
+          e.preventDefault();
+          uploadDrop.classList.add("dragover");
+        }),
+      );
+      uploadDrop.addEventListener("dragleave", (e) => {
+        e.preventDefault();
+        uploadDrop.classList.remove("dragover");
+      });
+      uploadDrop.addEventListener("drop", (e) => {
+        e.preventDefault();
+        uploadDrop.classList.remove("dragover");
+        if (!e.dataTransfer.files.length) return;
+        fileInput.files = e.dataTransfer.files;
+        updateFileLabel();
+        if (reduceMotion) return;
+        const z = uploadDrop.getBoundingClientRect();
+        const rim = rimPoint();
+        const sx = e.clientX - z.left;
+        const sy = e.clientY - z.top;
+        const rx = rim.x - z.left;
+        const ry = rim.y - z.top;
+        const ghost = document.createElement("div");
+        ghost.className = "shot-ghost";
+        ghost.innerHTML =
+          '<span class="bar"></span><span class="bar"></span><span class="bar"></span><em>FILE</em>';
+        ghost.style.left = `${sx - 31}px`;
+        ghost.style.top = `${sy - 39}px`;
+        uploadDrop.appendChild(ghost);
+        const dx = rx - sx;
+        const dy = ry - sy;
+        ghost
+          .animate(
+            [
+              { transform: "translate(0, 0)" },
+              {
+                transform: `translate(${dx * 0.5}px, ${Math.min(0, dy) - 70}px) scale(0.9)`,
+                offset: 0.5,
+              },
+              {
+                transform: `translate(${dx}px, ${dy}px) scale(0.75)`,
+                offset: 0.8,
+              },
+              {
+                transform: `translate(${dx}px, ${dy + 90}px) scale(0.35)`,
+                opacity: 0,
+              },
+            ],
+            { duration: 800, easing: "ease-in-out", fill: "forwards" },
+          )
+          .finished.then(() => {
+            ghost.remove();
+            swish();
+          });
+      });
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const file = fileInput.files[0];
+        if (!file) {
+          setStatus("Pehle file chunein (file ko hoop mein daalein).", "error");
+          return;
+        }
+        if (file.size === 0) {
+          setStatus("File khaali hai.", "error");
+          return;
+        }
+        if (file.size > MAX_FILE_SIZE) {
+          setStatus("File 1 GB se chhoti honi chahiye.", "error");
+          return;
+        }
+
+        resultEl.hidden = true;
+        resultEl.replaceChildren();
+        sendButton.disabled = true;
+        progress.hidden = false;
+        setProgress(0);
+        setStatus("Shuru ho raha hai...");
+
+        try {
+          const init = await api("/upload/init", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              filename: file.name,
+              size: file.size,
+              password: passwordInput.value,
+              title: titleInput.value.trim(),
+              linkname: linkInput.value.trim(),
+            }),
+          });
+          const id = init.upload_id;
+
+          for (let offset = 0; offset < file.size; offset += CHUNK) {
+            await sendChunk(id, file, offset);
+            const pct = Math.round(
+              (Math.min(offset + CHUNK, file.size) / file.size) * 100,
+            );
+            setProgress(pct);
+            setStatus(`Server par upload ho raha hai... ${pct}%`);
+          }
+
+          await api(`/upload/${id}/finish`, { method: "POST" });
+          setProgress(0);
+
+          let pollFails = 0;
+          while (true) {
+            await sleep(1500);
+            let s;
+            try {
+              s = await api(`/upload/${id}/status`);
+              pollFails = 0;
+            } catch (err) {
+              if (++pollFails >= 5) throw err;
+              continue;
+            }
+            if (s.state === "queued" || s.state === "zipping") {
+              setProgress(0);
+              setStatus("Zip ban rahi hai (password ke saath)...");
+            } else if (s.state === "sending") {
+              setProgress(s.progress);
+              setStatus(`Telegram par upload ho raha hai... ${s.progress}%`);
+            } else if (s.state === "done") {
+              setProgress(100);
+              showDone(s.link);
+              form.reset();
+              updateFileLabel();
+              break;
+            } else if (s.state === "error") {
+              throw new Error(s.error || "File nahi bheji ja saki.");
+            }
+          }
+        } catch (err) {
+          setStatus(err.message, "error");
+        } finally {
+          sendButton.disabled = false;
+        }
+      });
+    </script>
+  </body>
+</html>

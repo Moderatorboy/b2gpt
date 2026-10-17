@@ -1,0 +1,15 @@
+{
+  "redirects": [
+    {
+      "source": "/teleupload/:slug",
+      "destination": "https://api.b2gpt.online/d/:slug",
+      "permanent": false
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/teleupload",
+      "destination": "/teleupload.html"
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+[
+  {
+    "name": "Canva",
+    "icon": "https://img.icons8.com/fluency/48/000000/canva.png",
+    "width": 48,
+    "height": 48
+  },
+  {
+    "name": "Youtube",
+    "icon": "https://img.icons8.com/fluency/48/000000/youtube.png",
+    "width": 48,
+    "height": 48
+  },
+  {
+    "name": "VN",
+    "icon": "https://img.icons8.com/?size=100&id=B8HxnSBBGpvx&format=png&color=000000",
+    "width": 48,
+    "height": 48
+  },
+  {
+    "name": "Firebase",
+    "icon": "https://img.icons8.com/color/48/000000/firebase.png",
+    "width": 48,
+    "height": 48
+  },
+  {
+    "name": "Android",
+    "icon": "https://img.icons8.com/fluency/48/000000/android-os.png",
+    "width": 48,
+    "height": 48
+  },
+  {
+    "name": "HTML5",
+    "icon": "https://img.icons8.com/color/48/000000/html-5--v1.png",
+    "width": 48,
+    "height": 48
+  },
+  {
+    "name": "JavaScript",
+    "icon": "https://img.icons8.com/color/48/000000/javascript--v1.png",
+    "width": 48,
+    "height": 48
+  },
+  {
+    "name": "Heroku",
+    "icon": "https://img.icons8.com/color/48/000000/heroku.png",
+    "width": 48,
+    "height": 48
+  },
+  {
+    "name": "Netlify",
+    "icon": "https://img.icons8.com/external-tal-revivo-shadow-tal-revivo/48/000000/external-netlify-a-cloud-computing-company-that-offers-hosting-and-serverless-backend-services-for-static-websites-logo-shadow-tal-revivo.png",
+    "width": 48,
+    "height": 48
+  },
+  {
+    "name": "GitHub",
+    "icon": "https://img.icons8.com/glyph-neue/48/ffffff/github.png",
+    "width": 48,
+    "height": 48
+  },
+  {
+    "name": "Vercel",
+    "icon": "https://img.icons8.com/?size=100&id=2xFS7aynbwiR&format=png&color=000000",
+    "width": 48,
+    "height": 48
+  },
+  {
+    "name": "Wix",
+    "icon": "https://img.icons8.com/?size=100&id=cQfKnWABsKk9&format=png&color=000000",
+    "width": 48,
+    "height": 48
+  },
+  {
+    "name": "Odoo",
+    "icon": "https://odoocdn.com/openerp_website/static/src/img/assets/png/odoo_logo.png",
+    "width": 48,
+    "height": 48
+  }
+]

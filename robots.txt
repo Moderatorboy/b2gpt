@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://b2gpt.vercel.app/sitemap.xml
