@@ -394,8 +394,8 @@
         <span class="teleupload-kicker">B2GPT Project</span>
         <h1 id="teleupload-title">TeleUpload</h1>
         <p class="teleupload-intro">
-          File chunein, title aur password dalein. File zip hokar Telegram par
-          jayegi, aur 15 minute ka download link milega.
+          File chunein, apna khud ka password chunein. File aapke password ke saath
+          zip hokar Telegram par jayegi, aur 15 minute ka download link milega.
         </p>
 
         <form class="teleupload-form" id="teleuploadForm">
@@ -420,25 +420,25 @@
               aria-hidden="true"
             >
               <g class="net">
-                <line x1="52" y1="86" x2="76" y2="200" />
-                <line x1="52" y1="86" x2="84" y2="200" />
-                <line x1="68" y1="86" x2="76" y2="200" />
-                <line x1="68" y1="86" x2="84" y2="200" />
-                <line x1="68" y1="86" x2="92" y2="200" />
-                <line x1="84" y1="86" x2="84" y2="200" />
-                <line x1="84" y1="86" x2="92" y2="200" />
-                <line x1="84" y1="86" x2="100" y2="200" />
-                <line x1="100" y1="86" x2="92" y2="200" />
-                <line x1="100" y1="86" x2="100" y2="200" />
-                <line x1="100" y1="86" x2="108" y2="200" />
-                <line x1="116" y1="86" x2="100" y2="200" />
-                <line x1="116" y1="86" x2="108" y2="200" />
-                <line x1="116" y1="86" x2="116" y2="200" />
-                <line x1="132" y1="86" x2="108" y2="200" />
-                <line x1="132" y1="86" x2="116" y2="200" />
-                <line x1="132" y1="86" x2="124" y2="200" />
-                <line x1="148" y1="86" x2="116" y2="200" />
-                <line x1="148" y1="86" x2="124" y2="200" />
+              <line x1="52" y1="86" x2="76" y2="200" />
+              <line x1="52" y1="86" x2="84" y2="200" />
+              <line x1="68" y1="86" x2="76" y2="200" />
+              <line x1="68" y1="86" x2="84" y2="200" />
+              <line x1="68" y1="86" x2="92" y2="200" />
+              <line x1="84" y1="86" x2="84" y2="200" />
+              <line x1="84" y1="86" x2="92" y2="200" />
+              <line x1="84" y1="86" x2="100" y2="200" />
+              <line x1="100" y1="86" x2="92" y2="200" />
+              <line x1="100" y1="86" x2="100" y2="200" />
+              <line x1="100" y1="86" x2="108" y2="200" />
+              <line x1="116" y1="86" x2="100" y2="200" />
+              <line x1="116" y1="86" x2="108" y2="200" />
+              <line x1="116" y1="86" x2="116" y2="200" />
+              <line x1="132" y1="86" x2="108" y2="200" />
+              <line x1="132" y1="86" x2="116" y2="200" />
+              <line x1="132" y1="86" x2="124" y2="200" />
+              <line x1="148" y1="86" x2="116" y2="200" />
+              <line x1="148" y1="86" x2="124" y2="200" />
               </g>
               <rect class="board" x="45" y="4" width="110" height="70" rx="3" />
               <rect class="joint" x="92" y="74" width="16" height="8" />
@@ -474,14 +474,18 @@
             placeholder="jaise: forloop"
           />
 
-          <label for="password">Password</label>
+          <label for="password"
+            >Zip password <small>(aapka apna, 4+ characters)</small></label
+          >
           <input
             id="password"
             name="password"
             type="password"
-            autocomplete="current-password"
+            autocomplete="new-password"
+            minlength="4"
+            maxlength="128"
             required
-            placeholder="TeleUpload password (zip ka bhi yahi password)"
+            placeholder="File kholne ke liye ye password lagega"
           />
 
           <button class="teleupload-submit" id="sendButton" type="submit">
@@ -499,6 +503,10 @@
           ></p>
           <p class="teleupload-limit">
             Maximum file size: 1 GB | Download link 15 minute valid
+          </p>
+          <p class="teleupload-limit">
+            Password yaad rakhein: bhoolne par file khul nahi paayegi (7-Zip ya
+            WinRAR se kholein). Admin ke paas file ki backup copy rehti hai.
           </p>
           <div class="teleupload-result" id="result" hidden></div>
         </form>
@@ -540,17 +548,14 @@
         try {
           res = await fetch(API + path, options);
         } catch {
-          throw new Error(
-            "Network error. Internet check karke dobara try karein.",
-          );
+          throw new Error("Network error. Internet check karke dobara try karein.");
         }
         let data = null;
         try {
           data = await res.json();
         } catch {}
         if (!res.ok) {
-          const detail =
-            data && typeof data.detail === "string" ? data.detail : "";
+          const detail = data && typeof data.detail === "string" ? data.detail : "";
           throw new Error(detail || "Kuch galat ho gaya. Dobara try karein.");
         }
         return data;
@@ -684,15 +689,9 @@
         if (!drag) return;
         drag.tx = e.clientX - drag.dx - drag.ox;
         drag.ty = e.clientY - drag.dy - drag.oy;
-        const tilt = Math.max(
-          -18,
-          Math.min(18, (e.clientX - drag.last.x) * 1.5),
-        );
+        const tilt = Math.max(-18, Math.min(18, (e.clientX - drag.last.x) * 1.5));
         card.style.transform = `translate(${drag.tx}px, ${drag.ty}px) rotate(${tilt}deg)`;
-        const moved = Math.hypot(
-          e.clientX - drag.last.x,
-          e.clientY - drag.last.y,
-        );
+        const moved = Math.hypot(e.clientX - drag.last.x, e.clientY - drag.last.y);
         drag.travel += moved;
         if (moved >= 16) {
           addDot(drag.ox + drag.tx, drag.oy + drag.ty, drag.dots++);
@@ -742,10 +741,7 @@
           .animate(
             [
               { transform: `translate(${tx}px, ${ty}px)` },
-              {
-                transform: `translate(${toX}px, ${toY}px) scale(0.75)`,
-                offset: 0.45,
-              },
+              { transform: `translate(${toX}px, ${toY}px) scale(0.75)`, offset: 0.45 },
               {
                 transform: `translate(${toX}px, ${toY + 90}px) scale(0.35)`,
                 opacity: 0,
@@ -801,14 +797,8 @@
                 transform: `translate(${dx * 0.5}px, ${Math.min(0, dy) - 70}px) scale(0.9)`,
                 offset: 0.5,
               },
-              {
-                transform: `translate(${dx}px, ${dy}px) scale(0.75)`,
-                offset: 0.8,
-              },
-              {
-                transform: `translate(${dx}px, ${dy + 90}px) scale(0.35)`,
-                opacity: 0,
-              },
+              { transform: `translate(${dx}px, ${dy}px) scale(0.75)`, offset: 0.8 },
+              { transform: `translate(${dx}px, ${dy + 90}px) scale(0.35)`, opacity: 0 },
             ],
             { duration: 800, easing: "ease-in-out", fill: "forwards" },
           )
@@ -823,6 +813,10 @@
         const file = fileInput.files[0];
         if (!file) {
           setStatus("Pehle file chunein (file ko hoop mein daalein).", "error");
+          return;
+        }
+        if (passwordInput.value.length < 4) {
+          setStatus("Password kam se kam 4 characters ka rakhein.", "error");
           return;
         }
         if (file.size === 0) {
