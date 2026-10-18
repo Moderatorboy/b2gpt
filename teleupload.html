@@ -88,6 +88,7 @@
         margin-top: 0;
       }
       .teleupload-card {
+        min-height: 0; /* site css gives <section> a full-screen min-height */
         padding: clamp(2rem, 4vw, 3.2rem);
         border: 1px solid rgba(255, 255, 255, 0.14);
         border-radius: 1rem;
@@ -133,9 +134,6 @@
         margin-top: 1.8rem;
         text-align: center;
       }
-      .bot-panel[hidden] {
-        display: none;
-      }
       .bot-panel img {
         display: block;
         width: min(100%, 26rem);
@@ -155,6 +153,21 @@
         color: #b9bfd1;
         font-size: 1.3rem;
         line-height: 1.6;
+      }
+      .expand {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows 0.4s ease;
+      }
+      .expand.open {
+        grid-template-rows: 1fr;
+      }
+      .expand-inner {
+        min-height: 0;
+        overflow: hidden;
+      }
+      .expand-inner > .teleupload-result {
+        margin-top: 1.6rem;
       }
       .qr-wrap {
         margin-top: 1.4rem;
@@ -625,7 +638,11 @@
           <p class="side-hint" id="linkHint">
             Upload poora hone ke baad yahan aapka link aur QR code dikhega.
           </p>
-          <div class="teleupload-result" id="result" hidden></div>
+          <div class="expand" id="resultExpand" inert>
+            <div class="expand-inner">
+              <div class="teleupload-result" id="result"></div>
+            </div>
+          </div>
         </section>
           </div>
 
@@ -707,7 +724,9 @@
             <i class="fab fa-telegram-plane" aria-hidden="true"></i>
             <span>@B2GETFILES_BOT kholein</span>
           </button>
-          <div class="bot-panel" id="botPanel" hidden>
+          <div class="expand" id="botExpand" inert>
+            <div class="expand-inner">
+            <div class="bot-panel" id="botPanel">
             <img
               src="/assets/images/bot-qr.png"
               alt="@B2GETFILES_BOT ka QR code"
@@ -721,6 +740,8 @@
               QR scan karein ya link kholkar bot ko Start karein, tabhi aapko
               Telegram par files milengi.
             </p>
+          </div>
+            </div>
           </div>
         </section>
           </div>
@@ -749,11 +770,13 @@
       const resultEl = document.getElementById("result");
       const linkHint = document.getElementById("linkHint");
       const botBtn = document.getElementById("botBtn");
-      const botPanel = document.getElementById("botPanel");
+      const botExpand = document.getElementById("botExpand");
+      const resultExpand = document.getElementById("resultExpand");
 
       botBtn.addEventListener("click", () => {
-        const open = botPanel.hidden;
-        botPanel.hidden = !open;
+        const open = !botExpand.classList.contains("open");
+        botExpand.classList.toggle("open", open);
+        botExpand.inert = !open;
         botBtn.setAttribute("aria-expanded", String(open));
       });
 
@@ -857,9 +880,14 @@
         });
         resultEl.append(label, a, qrWrap, qrNote, copy);
         linkHint.hidden = true;
-        resultEl.hidden = false;
+        resultExpand.inert = false;
+        resultExpand.classList.add("open");
         if (window.matchMedia("(max-width: 900px)").matches) {
-          resultEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          setTimeout(
+            () =>
+              resultExpand.scrollIntoView({ behavior: "smooth", block: "nearest" }),
+            420,
+          );
         }
       }
 
@@ -1095,7 +1123,8 @@
           return;
         }
 
-        resultEl.hidden = true;
+        resultExpand.classList.remove("open");
+        resultExpand.inert = true;
         resultEl.replaceChildren();
         linkHint.hidden = false;
         sendButton.disabled = true;
